@@ -1,7 +1,21 @@
-"""
-This class contains the classes that would be used to make our system.
-Classes include Graph, _Vertex (abstract class), _Movie and _User
-(subclasses of _Vertex)
+"""CSC111 Winter 2023 Final Project: ScreenSelect
+===============================
+
+This module contains a collection of Python classes and functions that 
+would be used to make our system. Classes include Graph, 
+_Vertex (abstract class), _Movie and _User (subclasses of _Vertex).
+Please read before editing the file and comment the changes you make.
+
+Copyright and Usage Information
+===============================
+
+This file is provided solely for the use of marking the project to the staff of
+CSC111 at the University of Toronto St. George campus. All forms of
+distribution of this code, whether as given or with any changes, are
+expressly prohibited. 
+
+This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney, Narges Movahedian Nezhad, 
+and Dorothy Lee.
 """
 from python_ta.contracts import check_contracts
 from typing import Optional
