@@ -16,6 +16,7 @@ expressly prohibited.
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
+import csv  
 from typing import Optional
 from python_ta.contracts import check_contracts
 from dataclasses import dataclass
