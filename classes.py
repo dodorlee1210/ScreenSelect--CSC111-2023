@@ -18,9 +18,10 @@ Narges Movahedian Nezhad, and Dogyu Lee.
 """
 from typing import Optional
 from python_ta.contracts import check_contracts
-
+from dataclasses import dataclass
 
 @check_contracts
+@dataclass
 class _Vertex:
     """
     A vertex in a graph.
@@ -45,15 +46,15 @@ class _Vertex:
     keywords: Optional[set[str]]
     director: Optional[str]
 
-    def __init__(self) -> None:
-        """
-        Innitialize the empty class that will be rewritten by the _movie/_user class
-        """
-        self.item = ''
-        self.genre = None
-        self.lang = None
-        self.keywords = None
-        self.director = None
+#     def __init__(self) -> None:
+#         """
+#         Innitialize the empty class that will be rewritten by the _movie/_user class
+#         """
+#         self.item = ''
+#         self.genre = None
+#         self.lang = None
+#         self.keywords = None
+#         self.director = None
 
 
 @check_contracts
@@ -92,9 +93,9 @@ class _Movie(_Vertex):
     def __init__(self, item: int, genre: list[str], lang: str, keyword: set[str], director: str, title: str,
                  vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
         """
-        Innitialize the vertex given the above attributes of the Movie class (subclass of the Vertex Class).
+        Initialize the vertex given the above attributes of the Movie class (subclass of the Vertex Class).
         """
-        super().__init__()
+        # super().__init__()
         self.item = item
         self.genre = genre
         self.lang = lang
@@ -129,8 +130,9 @@ class _User(_Vertex):
       - all(self in u.neighbours for u in self.neighbours)
       """
     # Private Instance Attributes:
-    # _top_scores: The mapping containing the top five scoring MOVIE.
+    # _top_scores: The mapping containing the top five scoring movies.
     # RI: all(mov not in self.neighbours and mov not in self.past_10_neighbours for mov in self._top_scores.values())
+    
     password: str
     neighbours: set[_Vertex]
     past_10_neighbours: list[_Vertex]
@@ -138,9 +140,9 @@ class _User(_Vertex):
 
     def __init__(self, name: str, password: str) -> None:
         """
-        Innitialize the vertex given the above attributes of the User class (subclass of the Vertex Class).
+        Initialize the vertex given the above attributes of the _User class (subclass of the Vertex Class).
         """
-        super().__init__()
+        # super().__init__()
         self.item = name
         self.genre = None
         self.lang = None
@@ -158,8 +160,8 @@ class Graph:
     A graph class representing the enitre system.
     """
     # Private Instance Attributes:
-    # - _vertices: A collection of the vertices contained in this graph. Maps item to a Movie or _User instance.
-    # str - the value is a User and int - the value is Movie.
+    # - _vertices: A collection of the vertices contained in this graph. Maps item to a _Movie (id) or _User (name) instance.
+
     _vertices: dict[int | str, _Vertex]
 
     def __init__(self) -> None:
