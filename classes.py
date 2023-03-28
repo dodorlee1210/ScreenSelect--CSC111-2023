@@ -1,32 +1,28 @@
 """CSC111 Winter 2023 Final Project: ScreenSelect
-
 ===============================
 This module contains a collection of Python classes and functions that
 would be used to make our system. Classes include Graph,
 _Vertex (abstract class), _Movie and _User (subclasses of _Vertex).
 Please read before editing the file and comment the changes you make.
-
 Copyright and Usage Information
 ===============================
 This file is provided solely for the use of marking the project to the
 staff of CSC111 at the University of Toronto St. George campus. All forms of
 distribution of this code, whether as given or with any changes, are
 expressly prohibited.
-
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
-import csv  
 from typing import Optional
 from python_ta.contracts import check_contracts
 from dataclasses import dataclass
+
 
 @check_contracts
 @dataclass
 class _Vertex:
     """
     A vertex in a graph.
-
     Instance Attributes:
       - item: The username or movie id stored in this vertex.
       - genre: The collection of genre in a movie.
@@ -42,27 +38,16 @@ class _Vertex:
       - self.director is None or self.director != ''
     """
     item: int | str
-    genre: Optional[list[str]]
+    genre: Optional[set[str] | str]
     lang: Optional[str]
     keywords: Optional[set[str]]
     director: Optional[str]
-
-#     def __init__(self) -> None:
-#         """
-#         Innitialize the empty class that will be rewritten by the _movie/_user class
-#         """
-#         self.item = ''
-#         self.genre = None
-#         self.lang = None
-#         self.keywords = None
-#         self.director = None
 
 
 @check_contracts
 class _Movie(_Vertex):
     """
     A vertex that represents a movie in Graph.
-
     Instance Attributes:
       - title: The title of this movie.
       - vote_average: The average rating of this movie.
@@ -91,12 +76,12 @@ class _Movie(_Vertex):
     neighbours: dict[str, _Vertex]
     _total_score: dict[str, int]
 
-    def __init__(self, item: int, genre: list[str], lang: str, keyword: set[str], director: str, title: str,
+    def __init__(self, item: int, genre: set[str], lang: str, keyword: set[str], director: str, title: str,
                  vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
         """
         Initialize the vertex given the above attributes of the Movie class (subclass of the Vertex Class).
         """
-        # super().__init__()
+
         self.item = item
         self.genre = genre
         self.lang = lang
@@ -115,9 +100,7 @@ class _Movie(_Vertex):
 class _User(_Vertex):
     """
     A vertex that represents a user in Graph.
-
     Instance Attributes:
-      - password: The password for the user to enter their account
       - neighbours: A collection representing the user's choice of the past movie choices from
       the recommended options.
       - past_10_neighbours: A collection representing the user's 10 most recently choosen movies
@@ -133,23 +116,21 @@ class _User(_Vertex):
     # Private Instance Attributes:
     # _top_scores: The mapping containing the top five scoring movies.
     # RI: all(mov not in self.neighbours and mov not in self.past_10_neighbours for mov in self._top_scores.values())
-    
-    password: str
+
     neighbours: set[_Vertex]
     past_10_neighbours: list[_Vertex]
     _top_scores: dict[int, _Vertex]
 
-    def __init__(self, name: str, password: str) -> None:
+    def __init__(self, name: str) -> None:
         """
         Initialize the vertex given the above attributes of the _User class (subclass of the Vertex Class).
         """
-        # super().__init__()
+
         self.item = name
         self.genre = None
         self.lang = None
         self.keywords = None
         self.director = None
-        self.password = password
         self.neighbours = set()
         self.past_10_neighbours = []
         self._top_scores = {}
@@ -161,9 +142,10 @@ class Graph:
     A graph class representing the enitre system.
     """
     # Private Instance Attributes:
-    # - _vertices: A collection of the vertices contained in this graph. Maps item to a _Movie (id) or _User (name) instance.
+    # - _vertices: A collection of the vertices contained in this graph. Maps item to a _Movie (id) or _User (name)
+    # instance.
 
-    _vertices: dict[int | str, _Vertex]
+    _vertices: dict[int | str, _Vertex]  # unique names and ids only
 
     def __init__(self) -> None:
         """
