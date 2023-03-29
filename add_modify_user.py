@@ -60,7 +60,7 @@ def _user_choices(graph: Graph, username: str) -> None:
 
     while len(director) != 2:
         print("Please enter the name accordingly: FirstName LastName. There should be a space between the name.")
-        director = input("Please enter 1 preferred movie director's name. EX: FirstName LastName.")
+        director = input("Please enter 1 preferred movie director's name. EX: FirstName LastName.").split()
 
     graph.modify_preferences(username, genre, lang, set(keywords), director[0] + ' ' + director[1])
 
