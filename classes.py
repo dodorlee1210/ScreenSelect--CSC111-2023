@@ -63,6 +63,7 @@ class _Movie(_Vertex):
       - self not in self.neighbours
       - all(type(u) is not type(self) for u in self.neighbours)
       - all(self in u.neighbours for u in self.neighbours)
+      - all(is_instance(u, _User) for u in self.neighbours)
     """
     # Private Instance Attributes:
     # _total_score: A dictionary that stores users name and score for this movie based on Movie preferences
@@ -71,7 +72,7 @@ class _Movie(_Vertex):
     overview: str
     runtime: int
     release_date: str
-    neighbours: dict[str, _User]
+    neighbours: dict[str, _Vertex]
     _total_score: dict[str, int]
 
     def __init__(self, item: int, genre: set[str], lang: str, keyword: set[str], director: Optional[str], title: str,
@@ -157,7 +158,8 @@ class _User(_Vertex):
       - all(self in u.neighbours for u in self.neighbours)
       """
     # Private Instance Attributes:
-    # _top_scores: The mapping containing the top five scoring movies. (key represents the scrore and value is the _Movie)
+    # _top_scores: The mapping containing the top five scoring movies. (key represents the scrore and value is the
+    # _Movie)
     # RI: all(mov not in self.neighbours and mov not in self.past_10_neighbours for mov in self._top_scores.values())
 
     neighbours: set[_Movie]
@@ -168,7 +170,6 @@ class _User(_Vertex):
         """
         Initialize the vertex given the above attributes of the _User class (subclass of the Vertex Class).
         """
-
         self.item = name
         self.genre = None
         self.lang = None
@@ -258,6 +259,7 @@ class Graph:
         """
         movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
         self._vertices[item] = movie
+
 
 if __name__ == '__main__':
     import doctest
