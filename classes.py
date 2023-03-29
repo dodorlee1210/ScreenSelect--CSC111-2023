@@ -157,10 +157,8 @@ class Graph:
         """
         Return whether the user already exists in the graph.
         """
-        if item in self._vertices:
-            return False
-        else:
-            return True
+        
+        return item in self._vertices
 
     def add_vertex(self, username: str) -> None:
         """
@@ -178,7 +176,7 @@ class Graph:
         Precondition:
         - username != ''
         """
-        user = self._vertices.get(username)
+        user = self._vertices[username]
         user.genre = genre
         user.lang = lang
         user.keywords = keywords
