@@ -1,10 +1,7 @@
 """CSC111 Winter 2023 Final Project: ScreenSelect
 
 ===============================
-This module contains a collection of Python classes and functions that
-would be used to make our system. Classes include Graph,
-_Vertex (abstract class), _Movie and _User (subclasses of _Vertex).
-Please read before editing the file and comment the changes you make.
+This module contains a collection of top level functions that will be caled by the main.py.
 
 Copyright and Usage Information
 ===============================
@@ -59,7 +56,7 @@ def _user_choices(graph: Graph, username: str) -> None:
         print("Your input should not exceed 3 words.")
         keywords = input("Please enter up to 3 keywords.").split()
 
-    director = input("Please enter 1 preferred movie director's name. EX: FirstName LastName.").split()
+    director = input("Please enter 1 preferred movie director's name. Example: FirstName LastName.").split()
 
     while len(director) != 2:
         print("Please enter the name accordingly: FirstName LastName. There should be a space between the name.")
