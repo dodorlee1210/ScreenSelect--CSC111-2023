@@ -29,7 +29,6 @@ class _Vertex:
       - lang: The language used in a movie.
       - keywords: The collection of keywords used to describe a movie.
       - director: The director of a movie.
-
     Representation Invariant:
       - self.item != ''
       - self.genre is None or self.genre != []
@@ -55,7 +54,6 @@ class _Movie(_Vertex):
       - runtime: The runtime of this movie in minutes.
       - release_date: The date this movie was released.
       - neighbours: A mapping containing the neighbours of this vertex.
-
     Represenatation Invariants:
       - self.title != ''
       - self.vote_average >= 0.0
@@ -105,7 +103,6 @@ class _User(_Vertex):
       the recommended options.
       - past_10_neighbours: A collection representing the user's 10 most recently choosen movies
       from the recommended options.
-
     Representation Invariants:
       - len(self.keywords) <= 3
       - len(self.past_10_neighbours) <= 10
@@ -152,18 +149,16 @@ class Graph:
         Initialize an empty graph (no vertices or edges).
         """
         self._vertices = {}
-        
-     def verify_vertex(self, item: str) -> bool:
+
+    def verify_vertex(self, item: str) -> bool:
         """
         Return whether the user already exists in the graph.
         """
-        
         return item in self._vertices
 
     def add_vertex(self, username: str) -> None:
         """
         Add a user to the graph.
-
         Precondition:
         - username != ''
         """
@@ -172,7 +167,6 @@ class Graph:
     def modify_preferences(self, username: str, genre: str, lang: str, keywords: set[str], director: str) -> None:
         """
         Modify the instance attributes of this user.
-
         Precondition:
         - username != ''
         """
@@ -181,6 +175,12 @@ class Graph:
         user.lang = lang
         user.keywords = keywords
         user.director = director
+
+    def add_movie_vertex(self, item: int, genre: set[str], lang: str, keyword: set[str], director: str, title: str,
+                         vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
+        """Create the movie object and add into the graph itself."""
+        movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
+        self._vertices[item] = movie
 
 
 if __name__ == '__main__':
