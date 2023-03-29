@@ -155,8 +155,7 @@ class Graph:
         
      def verify_vertex(self, item: str) -> bool:
         """
-        Check whether the user already exists in the graph.
-        If user doesn't exist in the graph, add the new user to the graph.
+        Return whether the user already exists in the graph.
         """
         if item in self._vertices:
             return False
@@ -174,7 +173,7 @@ class Graph:
 
     def modify_preferences(self, username: str, genre: str, lang: str, keywords: set[str], director: str) -> None:
         """
-        Modify the certain instance attributes of this user.
+        Modify the instance attributes of this user.
 
         Precondition:
         - username != ''
