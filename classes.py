@@ -178,7 +178,16 @@ class Graph:
 
     def add_movie_vertex(self, item: int, genre: set[str], lang: str, keyword: set[str], director: str, title: str,
                          vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
-        """Create the movie object and add into the graph itself."""
+        """Create the movie object and add into the graph itself.
+
+        Preconditions:
+        - isinstance(item, int)
+        - title != ''
+        - vote_average >= 0.0
+        - overview != ''
+        - runtime >= 0
+        - release_date != ''
+        """
         movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
         self._vertices[item] = movie
 
