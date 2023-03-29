@@ -37,10 +37,10 @@ class _Vertex:
       - self.director is None or self.director != ''
     """
     item: int | str
-    genre: Optional[set[str] | str]
-    lang: Optional[str]
-    keywords: Optional[set[str]]
-    director: Optional[str]
+    genre: Optional[set[str] | str] = None
+    lang: Optional[str] = None
+    keywords: Optional[set[str]] = None
+    director: Optional[str] = None
 
 
 @check_contracts
@@ -71,10 +71,10 @@ class _Movie(_Vertex):
     overview: str
     runtime: int
     release_date: str
-    neighbours: dict[str, _Vertex]
+    neighbours: dict[str, _User]
     _total_score: dict[str, int]
 
-    def __init__(self, item: int, genre: set[str], lang: str, keyword: set[str], director: str, title: str,
+    def __init__(self, item: int, genre: set[str], lang: str, keyword: set[str], director: Optional[str], title: str,
                  vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
         """
         Initialize the vertex given the above attributes of the Movie class (subclass of the Vertex Class).
@@ -92,6 +92,52 @@ class _Movie(_Vertex):
         self.release_date = release_date
         self.neighbours = {}
         self._total_score = {}
+
+    def score(self, user: _Vertex, username: str) -> None:
+        """
+        Return the score of the movie
+        """
+        score = 0
+        if user.genre in self.genre:
+            score += 10
+        else:
+            score += 5
+
+        if user.lang == self.lang:
+            score += 10
+        else:
+            score += 5
+
+        for keyword in user.keywords:
+            if keyword in self.keywords:
+                score += 5
+
+        if user.director == self.director:
+            score += 5
+
+        for movie_obj in user.past_10_neighbours:
+            for key in movie_obj.keywords:
+                if key in self.keywords:
+                    score += 5
+            if (movie_obj.director is not None and self.director is not None) and (movie_obj.director == self.director):
+                score += 5
+            if movie_obj.lang == self.lang:
+                score += 10
+            else:
+                score += 5
+            for key in movie_obj.genre:
+                if key in self.genre:
+                    score += 10
+                else:
+                    score += 5
+
+        self._total_score[username] = score
+        if len(user.retrieve_top_scores()) == 5:
+            if min(user.retrieve_top_scores()) <= score:
+                user.retrieve_top_scores().pop(min(user.retrieve_top_scores()))
+                user.retrieve_top_scores()[score] = self
+        else:
+            user.retrieve_top_scores()[score] = self
 
 
 @check_contracts
@@ -111,12 +157,12 @@ class _User(_Vertex):
       - all(self in u.neighbours for u in self.neighbours)
       """
     # Private Instance Attributes:
-    # _top_scores: The mapping containing the top five scoring movies.
+    # _top_scores: The mapping containing the top five scoring movies. (key represents the scrore and value is the _Movie)
     # RI: all(mov not in self.neighbours and mov not in self.past_10_neighbours for mov in self._top_scores.values())
 
-    neighbours: set[_Vertex]
-    past_10_neighbours: list[_Vertex]
-    _top_scores: dict[int, _Vertex]
+    neighbours: set[_Movie]
+    past_10_neighbours: list[_Movie]
+    _top_scores: dict[int, _Movie]
 
     def __init__(self, name: str) -> None:
         """
@@ -131,6 +177,24 @@ class _User(_Vertex):
         self.neighbours = set()
         self.past_10_neighbours = []
         self._top_scores = {}
+
+    def retrieve_top_scores(self) -> dict[int, _Movie]:
+        """
+        Return the top scores
+        """
+        return self._top_scores
+
+    def modify_preferences(self, genre: str, lang: str, keywords: set[str], director: str) -> None:
+        """
+        Modify the instance attributes of this user.
+        Precondition:
+        - username != ''
+        """
+
+        self.genre = genre
+        self.lang = lang
+        self.keywords = keywords
+        self.director = director
 
 
 @check_contracts
@@ -154,9 +218,10 @@ class Graph:
         """
         Return whether the user already exists in the graph.
         """
+
         return item in self._vertices
 
-    def add_vertex(self, username: str) -> None:
+    def add_user_vertex(self, username: str) -> None:
         """
         Add a user to the graph.
         Precondition:
@@ -164,22 +229,25 @@ class Graph:
         """
         self._vertices[username] = _User(username)
 
-    def modify_preferences(self, username: str, genre: str, lang: str, keywords: set[str], director: str) -> None:
+    def retrieve_item_obj(self, item: str | int) -> _Vertex:
         """
-        Modify the instance attributes of this user.
+        Return the _User or _Movie instance corresponding to the username or id.
+        Precondition:
+        - item != ''
+        """
+        return self._vertices[item]
+
+    def retrieve_vertex_dict(self) -> dict[int | str, _Vertex]:
+        """
+        Return the _User instance corresponding to the username.
         Precondition:
         - username != ''
         """
-        user = self._vertices[username]
-        user.genre = genre
-        user.lang = lang
-        user.keywords = keywords
-        user.director = director
+        return self._vertices
 
-    def add_movie_vertex(self, item: int, genre: set[str], lang: str, keyword: set[str], director: str, title: str,
+    def add_movie_vertex(self, item: int, genre: set[str], lang: str, keyword: set[str], director: Optional[str], title: str,
                          vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
         """Create the movie object and add into the graph itself.
-
         Preconditions:
         - isinstance(item, int)
         - title != ''
@@ -190,7 +258,6 @@ class Graph:
         """
         movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
         self._vertices[item] = movie
-
 
 if __name__ == '__main__':
     import doctest
