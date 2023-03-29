@@ -16,7 +16,7 @@ Narges Movahedian Nezhad, and Dogyu Lee.
 from typing import Optional
 from python_ta.contracts import check_contracts
 from dataclasses import dataclass
-from vertex_main import Graph
+from classes import Graph
 
 
 def user_log_in(graph: Graph) -> str:
