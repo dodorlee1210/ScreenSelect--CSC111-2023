@@ -152,6 +152,38 @@ class Graph:
         Initialize an empty graph (no vertices or edges).
         """
         self._vertices = {}
+        
+     def verify_vertex(self, item: str) -> bool:
+        """
+        Check whether the user already exists in the graph.
+        If user doesn't exist in the graph, add the new user to the graph.
+        """
+        if item in self._vertices:
+            return False
+        else:
+            return True
+
+    def add_vertex(self, username: str) -> None:
+        """
+        Add a user to the graph.
+
+        Precondition:
+        - username != ''
+        """
+        self._vertices[username] = _User(username)
+
+    def modify_preferences(self, username: str, genre: str, lang: str, keywords: set[str], director: str) -> None:
+        """
+        Modify the certain instance attributes of this user.
+
+        Precondition:
+        - username != ''
+        """
+        user = self._vertices.get(username)
+        user.genre = genre
+        user.lang = lang
+        user.keywords = keywords
+        user.director = director
 
 
 if __name__ == '__main__':
