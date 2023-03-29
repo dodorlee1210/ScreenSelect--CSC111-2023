@@ -52,7 +52,7 @@ def _user_choices(graph: Graph, username: str) -> None:
 
     keywords = input("Please enter a maximum of 3 keywords with spaces in between each keyword.").split()
 
-    while len(keywords) > 3:
+    while len(keywords) <= 3:
         print("Your input should not exceed 3 words.")
         keywords = input("Please enter up to 3 keywords.").split()
 
