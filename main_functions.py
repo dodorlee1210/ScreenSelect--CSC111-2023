@@ -10,9 +10,11 @@ expressly prohibited.
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
+import csv
+from typing import Any
 
 from python_ta.contracts import check_contracts
-from classes import Graph, _Vertex, _User, _Movie
+from classes import Graph, _Movie
 
 
 def user_log_in(graph: Graph) -> str:
@@ -79,7 +81,6 @@ def compute(graph: Graph, username: str) -> dict[int, _Movie]:
 def user_movie_neighbours(top_movies: dict[int, _Movie], graph: Graph, username: str) -> None:
     """
     Allows the user to choose the movie from top_movies
-
     Preconditions:
         - len(top_movies) == 5
     """
@@ -109,14 +110,68 @@ def user_movie_neighbours(top_movies: dict[int, _Movie], graph: Graph, username:
 
 
 def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> None:
-    """Load the graph with data from the csv files.
-    csv_file1 is the file with information about the movies without the director.
-    csv_file2 is the file with the directors for the movies.
+    """Read the csv filer and add the movies in the greaph class, with the attributes of the different Graph class.
+    csv_file1 is the file with information about the Movie without the director
+    csv_file2 is the file with the director
 
     Preconditions:
-        - csv_file1 != ''
-        - csv_file1 is a valid csv file in the specific format described in the proposal
+    - csv_file1 != ''
+    - csv_file1 is a valid csv file in the specific format described in proposal
     """
+    with open(csv_file1) as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)
+        for row in reader:
+            id_item = int(row[3])
+            genre = find_genre_keyword_list(row[1])
+            lan = row[5]
+            keyword = find_genre_keyword_list(row[4])
+            title = row[17]
+            director = find_director(csv_file2, title)
+            vote_average = float(row[18])
+            overview = row[7]
+            runtime = int(row[13])
+            realese_date = row[11]
+            graph.add_movie_vertex(item=id_item, genre=genre, lang=lan, keyword=keyword, director=director,
+                                   title=title, vote_avg=vote_average, overview=overview, runtime=runtime,
+                                   release_date=realese_date)
+
+
+def find_genre_keyword_list(stri: str) -> set[str]:
+    """Return a list of the genre/keywords given a string in the format of
+    "[{'id': 28, 'name': 'Action'}, {'id': 12, 'name': 'Adventure'}, {'id': 14, 'name': 'Fantasy'}]"
+
+    The returned output is ['Action', 'Adventure', 'Fantasy']
+    """
+    string = stri.strip("[]")
+    dict_list = string.split(", ")
+    dict_list1 = [d.strip("{}").split(": ") for d in dict_list]
+    dict_list2 = [{k.strip("'"): v.strip("'")} for k, v in dict_list1]
+    names_list = {d["name"] for d in dict_list2 if 'name' in d}
+    return names_list
+
+
+def find_director(csv_file2: str, movie_name: str) -> Any:
+    """
+    Return the director of the movie if found in the csv_file2 based on the movie name given.
+    The return value is none if no director found in the movie dataset
+
+    Precondition:
+    - movie_name != ''
+    - csv_file2 != ''
+    """
+    with open(csv_file2) as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)
+        for row in reader:
+            if movie_name == row[1]:
+                string = row[3]
+                credit_eval = eval(string)
+                director = next((cre["name"] for cre in credit_eval if cre["job"] == "Director"), None)
+                if isinstance(director, str):
+                    return director
+                else:
+                    return None
 
 
 if __name__ == '__main__':
@@ -134,3 +189,4 @@ if __name__ == '__main__':
         'max-line-length': 120,
         'disable': ['E9992', 'E9997']
     })
+
