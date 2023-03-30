@@ -123,11 +123,11 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
         next(reader)
         for row in reader:
             id_item = int(row[3])
-            genre = find_genre_keyword_list(row[1])
+            genre = _find_genre_keyword_list(row[1])
             lan = row[5]
-            keyword = find_genre_keyword_list(row[4])
+            keyword = _find_genre_keyword_list(row[4])
             title = row[17]
-            director = find_director(csv_file2, title)
+            director = _find_director(csv_file2, title)
             vote_average = float(row[18])
             overview = row[7]
             runtime = int(row[13])
@@ -137,7 +137,7 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
                                    release_date=realese_date)
 
 
-def find_genre_keyword_list(stri: str) -> set[str]:
+def _find_genre_keyword_list(stri: str) -> set[str]:
     """Return a list of the genre/keywords given a string in the format of
     "[{'id': 28, 'name': 'Action'}, {'id': 12, 'name': 'Adventure'}, {'id': 14, 'name': 'Fantasy'}]"
 
@@ -151,7 +151,7 @@ def find_genre_keyword_list(stri: str) -> set[str]:
     return names_list
 
 
-def find_director(csv_file2: str, movie_name: str) -> Any:
+def _find_director(csv_file2: str, movie_name: str) -> Any:
     """
     Return the director of the movie if found in the csv_file2 based on the movie name given.
     The return value is none if no director found in the movie dataset
