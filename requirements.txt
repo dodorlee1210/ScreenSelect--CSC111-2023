@@ -1,0 +1,7 @@
+# CSC111 Project ScreenSelect: Python libraries to install for the program.
+
+# Testing and code checking
+python-ta~=2.4.2
+
+# User interface
+PyQt6~=6.4.2
