@@ -17,7 +17,7 @@ from typing import Any
 
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout)
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QFont
 import sys
 
 
@@ -32,23 +32,32 @@ class RecommendationScreen(QWidget):
         self.w = None
         layout = QGridLayout()
         self.setWindowIcon(QIcon("ScreenSelectIcon.jpg"))
+        self.setStyleSheet("background-color: #CAD7CF;")
 
         self.setWindowTitle("ScreenSelect")
         self.setLayout(layout)
         layout.setContentsMargins(30, 30, 30, 30)
         layout.setSpacing(20)
         title1 = QLabel("ScreenSelect: Personalized Movie Recommendation System")
+        title1.setStyleSheet("color: #347c99;")
+        title1.setFont(QFont("Trebuchet MS", 20, QFont.Weight.Bold))
         layout.addWidget(title1, 0, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
         colum = 0
         for movie in movie_lst:
             save = str(movie_lst[movie])
             movie1 = QLabel(save)
+            movie1.setFont(QFont("Courier New", 15))
+            movie1.setStyleSheet("color: #347c99;")
             layout.addWidget(movie1, 3, colum, 1, 3)
             button1 = QPushButton("ScreenSelect")
+            button1.setFont(QFont("Courier New", 12))
+            button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
             button1.clicked.connect(self.screenselect)
             layout.addWidget(button1, 4, colum)
             colum += 1
         button2 = QPushButton("Back")
+        button2.setFont(QFont("Courier New", 12))
+        button2.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button2.clicked.connect(self.back)
         layout.addWidget(button2)
 
@@ -85,43 +94,72 @@ class PrefenceScreen(QWidget):
         self.w = None
         layout = QGridLayout()
         self.setWindowIcon(QIcon("ScreenSelectIcon.jpg"))
+        self.setStyleSheet("background-color: #CAD7CF;")
 
         self.setWindowTitle("ScreenSelect")
         self.setLayout(layout)
         layout.setContentsMargins(40, 40, 40, 40)
         layout.setSpacing(20)
         title1 = QLabel("ScreenSelect: Personalized Movie Recommendation System")
+        title1.setStyleSheet("color: #347c99;")
+        title1.setFont(QFont("Trebuchet MS", 20, QFont.Weight.Bold))
         layout.addWidget(title1, 0, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
         title2 = QLabel("Add the Movie Preferences:")
+        title2.setStyleSheet("color: #347c99;")
+        title2.setFont(QFont("Trebuchet MS", 16, QFont.Weight.Bold))
         layout.addWidget(title2, 2, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
 
         genre = QLabel("Genre:")
+        genre.setFont(QFont("Courier New", 15))
+        genre.setStyleSheet("color: #347c99;")
         layout.addWidget(genre, 3, 0)
         lang = QLabel("Language:")
+        lang.setFont(QFont("Courier New", 15))
+        lang.setStyleSheet("color: #347c99;")
         layout.addWidget(lang, 4, 0)
         key = QLabel("Keywords (max 3):")
+        key.setFont(QFont("Courier New", 15))
+        key.setStyleSheet("color: #347c99;")
         layout.addWidget(key, 5, 0)
         director = QLabel("Director:")
+        director.setFont(QFont("Courier New", 15))
+        director.setStyleSheet("color: #347c99;")
         layout.addWidget(director, 8, 0)
 
         self.genre_input = QLineEdit()
+        self.genre_input.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.genre_input.setFont(QFont("Arial", 12))
         layout.addWidget(self.genre_input, 3, 1, 1, 2)
         self.lang_input = QLineEdit()
+        self.lang_input.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.lang_input.setFont(QFont("Arial", 12))
         layout.addWidget(self.lang_input, 4, 1, 1, 2)
         self.key_input1 = QLineEdit()
+        self.key_input1.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.key_input1.setFont(QFont("Arial", 12))
         layout.addWidget(self.key_input1, 5, 1, 1, 2)
         self.key_input2 = QLineEdit()
+        self.key_input2.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.key_input2.setFont(QFont("Arial", 12))
         layout.addWidget(self.key_input2, 6, 1, 1, 2)
         self.key_input3 = QLineEdit()
+        self.key_input3.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.key_input3.setFont(QFont("Arial", 12))
         layout.addWidget(self.key_input3, 7, 1, 1, 2)
         self.director_input = QLineEdit()
+        self.director_input.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.director_input.setFont(QFont("Arial", 12))
         layout.addWidget(self.director_input, 8, 1, 1, 2)
 
         button1 = QPushButton("Log Out")  # calling the sign in function
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button1.clicked.connect(self.log_out)
         layout.addWidget(button1, 9, 1)
 
         button2 = QPushButton("Recommend")  # calling the sign in function
+        button2.setFont(QFont("Courier New", 12))
+        button2.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button2.clicked.connect(self.recommendation_button)
         layout.addWidget(button2, 9, 2)
 
@@ -159,25 +197,36 @@ class LogInScreen(QWidget):
         self.w = None
         layout = QGridLayout()
         self.setWindowIcon(QIcon("ScreenSelectIcon.jpg"))
+        self.setStyleSheet("background-color: #CAD7CF;")
 
         self.setWindowTitle("ScreenSelect")
         self.setLayout(layout)
         layout.setContentsMargins(40, 40, 40, 40)
         layout.setSpacing(20)
         title = QLabel("ScreenSelect: Personalized Movie Recommendation System")
+        title.setStyleSheet("color: #347c99;")
+        title.setFont(QFont("Trebuchet MS", 20, QFont.Weight.Bold))
         layout.addWidget(title, 0, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
 
         user = QLabel("Username:")
+        user.setFont(QFont("Courier New", 15))
+        user.setStyleSheet("color: #347c99;")
         layout.addWidget(user, 1, 0)
 
         self.input1 = QLineEdit()
+        self.input1.setStyleSheet("background-color: #FFFFFF;")  # Set input background color
+        self.input1.setFont(QFont("Arial", 12))
         layout.addWidget(self.input1, 1, 1, 1, 2)
 
         button1 = QPushButton("Sign In")
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button1.clicked.connect(self.sign_in)  # calling the sign in function
         layout.addWidget(button1, 3, 1)
 
         button2 = QPushButton("Sign Up")
+        button2.setFont(QFont("Courier New", 12))
+        button2.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button2.clicked.connect(self.sign_up)  # calling the sign in function
         layout.addWidget(button2, 3, 2)
 
@@ -215,3 +264,5 @@ if __name__ == '__main__':
     window = LogInScreen()
     window.show()  # To show the gui window the above code is very static to a window open
     sys.exit(app.exec())
+
+
