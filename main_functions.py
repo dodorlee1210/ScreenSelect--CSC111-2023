@@ -19,9 +19,9 @@ from classes import Graph, _Movie
 
 def user_log_in(graph: Graph) -> str:
     """
-    If user doesn't exist, add user to the given graph with its movie preferences recorded.
-    If user exists, modify its movie preferences.
-    Return username of new or existing user
+    Return the username of the user after verifying it exists.
+    Add the user to the given graph if non-existent in the graph.
+    Reassign user preferences.
     """
     username = input("Please enter your username")
 
@@ -40,7 +40,8 @@ def user_log_in(graph: Graph) -> str:
 
 def _user_choices(graph: Graph, username: str) -> None:
     """
-    Retrieve user movie preferences and store them for the user.
+    Retrieve user movie preference inputs and reassign the given user's preference attributes.
+    
     Precondition:
         - username != ''
     """
