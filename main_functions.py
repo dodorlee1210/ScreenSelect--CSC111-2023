@@ -119,7 +119,7 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
     - csv_file1 != ''
     - csv_file1 is a valid csv file in the specific format described in proposal
     """
-    with open(csv_file1) as csv_file:
+    with open(csv_file1, encoding="utf-8") as csv_file:
         reader = csv.reader(csv_file)
         next(reader)
         for row in reader:
@@ -149,14 +149,6 @@ def _find_genre_keyword_list(stri: str) -> set[str]:
     for dict_1 in list_of_dicts:
         set_so_far.add(dict_1['name'])
     return set_so_far
-
-    # string = stri.strip("[]")
-    # dict_list = string.split(", ")
-    # dict_list1 = [d.strip("{}").split(": ") for d in dict_list]
-    # dict_list2 = [{k.strip("'"): v.strip("'")} for k, v in dict_list1]
-    # names_list = {d['"name"'] for d in dict_list2 if '"name"' in d}
-    # names_list2 = {word.strip('"') for word in names_list}
-    # return names_list2
 
 
 def _find_director(csv_file2: str, movie_name: str) -> Any:
