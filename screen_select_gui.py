@@ -1,9 +1,7 @@
 """CSC111 Winter 2023 Final Project: ScreenSelect
 ===============================
-
 This file contains the classes and main to run the
 unconnected GUI for ScreenSelect.
-
 Copyright and Usage Information
 ===============================
 This file is provided solely for the use of marking the project to the
@@ -19,16 +17,22 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEd
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QFont
 import sys
+from classes import Graph, _User, _Movie, _Vertex
+import main_functions
 
 
 class RecommendationScreen(QWidget):
     """The third screen the user sees, also where they choose a recommended movie given.
-
     If the ScreenSelect button or Back is clicked then it takes the user back to Prefernce screen.
     """
-    def __init__(self, movie_lst: dict[int, Any]) -> None:
+
+    def __init__(self, top_scores: list[tuple[int, _Movie]], graph: Graph, user_obj: _User) -> None:
         super().__init__()
-        self.movie_lst = movie_lst
+        self.graph = graph
+        self.user_obj = user_obj
+        # top_scores = main_functions.compute(self.graph, self.user_obj.item)
+        self.movie_lst = top_scores
+
         self.w = None
         layout = QGridLayout()
         self.setWindowIcon(QIcon("ScreenSelectIcon.jpg"))
@@ -42,33 +46,34 @@ class RecommendationScreen(QWidget):
         title1.setStyleSheet("color: #347c99;")
         title1.setFont(QFont("Trebuchet MS", 20, QFont.Weight.Bold))
         layout.addWidget(title1, 0, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
-        colum = 0
-        for movie in movie_lst:
-            save = str(movie_lst[movie])
+        column = 0
+        for tup_movie in self.movie_lst:
+            save = tup_movie[1].title
             movie1 = QLabel(save)
             movie1.setFont(QFont("Courier New", 15))
             movie1.setStyleSheet("color: #347c99;")
-            layout.addWidget(movie1, 3, colum, 1, 3)
-            button1 = QPushButton("ScreenSelect")
+            layout.addWidget(movie1, 3, column, 1, 3)
+            button1 = QPushButton("Select")
             button1.setFont(QFont("Courier New", 12))
             button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
-            button1.clicked.connect(self.screenselect)
-            layout.addWidget(button1, 4, colum)
-            colum += 1
+            button1.clicked.connect(self.screenselect(tup_movie[1]))
+            layout.addWidget(button1, 4, column)
+            column += 1
         button2 = QPushButton("Back")
         button2.setFont(QFont("Courier New", 12))
         button2.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button2.clicked.connect(self.back)
         layout.addWidget(button2)
 
-    def screenselect(self):
+    def screenselect(self, movie_obj: _Movie):
         """
-        Select one of the given movies and add it to graph neighbours,
+        Select the first movie and add it to graph neighbours,
         then return back to the preferences screen.
         """
-        # sid do the work function call
+
         if self.w is None:
-            self.w = PrefenceScreen()
+            main_functions.user_movie_neighbours(movie_obj, self.graph, self.user_obj.item)
+            self.w = PrefenceScreen(self.graph, self.user_obj)
         self.w.show()
         self.close()
 
@@ -77,7 +82,7 @@ class RecommendationScreen(QWidget):
         Without selecting a movie return to the preferences screen.
         """
         if self.w is None:
-            self.w = PrefenceScreen()
+            self.w = PrefenceScreen(self.graph, self.user_obj)
         self.w.show()
         self.close()
 
@@ -85,12 +90,14 @@ class RecommendationScreen(QWidget):
 class PrefenceScreen(QWidget):
     """The second screen the user sees, also where they put in their preferences and
     the button - Recommendations is clicked to go to next screen
-
     If the Logout button is clicked then the system goes back to the LogInScreen page.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, graph: Graph, user_obj: _User) -> None:
+
         super().__init__()
+        self.user_obj = user_obj
+        self.graph = graph
         self.w = None
         layout = QGridLayout()
         self.setWindowIcon(QIcon("ScreenSelectIcon.jpg"))
@@ -168,7 +175,7 @@ class PrefenceScreen(QWidget):
         Function activated when button1 clicked, takes back to the LogInScreen.
         """
         if self.w is None:
-            self.w = LogInScreen()
+            self.w = LogInScreen(self.graph)
         self.w.show()
         self.close()
 
@@ -176,24 +183,35 @@ class PrefenceScreen(QWidget):
         """
         Function activated when button2 clicked, takes to the Recommendation screen.
         """
+
         if self.w is None:
-            self.w = RecommendationScreen({1: 'Aastha', 2: 'Narges', 3: 'Dorothy', 4: 'Sid', 5: 'ScreenSelect'})
-            # call the function that gives the 5 movies to present
-            # Don't forgot to change the recommendation system innit SID do the work
+            keywords = set()
+            if self.key_input1.displayText() != '':
+                keywords.add(self.key_input1.displayText())
+            if self.key_input2.displayText() != '':
+                keywords.add(self.key_input2.displayText())
+            if self.key_input3.displayText() != '':
+                keywords.add(self.key_input3.displayText())
+
+            self.user_obj.modify_preferences(self.genre_input.displayText(), self.lang_input.displayText(), keywords,
+                                             self.director_input.displayText())
+            top_scores = main_functions.compute(self.graph, self.user_obj.item)
+            print(top_scores)  # remove later
+            self.w = RecommendationScreen(top_scores, self.graph, self.user_obj)
         self.w.show()
         self.close()
 
 
 class LogInScreen(QWidget):
     """The Log in window that the user sees once the movies are all loaded up in the graph.
-
     The user can sign up or sign in. When the cross on top is pressed the code stops running and stops.
-
     Input is only the username, possible buttons are sign up or sign in.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, graph: Graph) -> None:
+
         super().__init__()
+        self.graph = graph  # loaded graph
         self.w = None
         layout = QGridLayout()
         self.setWindowIcon(QIcon("ScreenSelectIcon.jpg"))
@@ -237,12 +255,16 @@ class LogInScreen(QWidget):
         else:
             print("Please sign up")
         """
-        print('correct call reached sign in')
-        # Sid Implement THIS
-        if self.w is None:
-            self.w = PrefenceScreen()
-        self.w.show()
-        self.close()
+        if self.input1.displayText() in self.graph.retrieve_vertex_dict():  # point of error
+            user_obj = self.graph.retrieve_item_obj(self.input1.displayText())
+            print('Sign in successful!')
+            if self.w is None:
+                self.w = PrefenceScreen(self.graph, user_obj)
+                print(user_obj.item)  # remove later
+            self.w.show()
+            self.close()
+        else:
+            print('Sign in unsuccessful, please sign up!')
 
     def sign_up(self):
         """
@@ -251,18 +273,20 @@ class LogInScreen(QWidget):
         else:
             # call function and move to next screen - preferences
         """
-        print('correct call reached sign up')
-        if self.w is None:
-            self.w = PrefenceScreen()
-        self.w.show()
-        self.close()
-        # Sid Implement THIS
+        if self.input1.displayText() in self.graph.retrieve_vertex_dict():
+            print("Username already exists! Please sign in.")
+        else:
+            print('Sign up successful!')
+            self.graph.add_user_vertex(self.input1.displayText())
+            user_obj = self.graph.retrieve_item_obj(self.input1.displayText())
+            if self.w is None:
+                self.w = PrefenceScreen(self.graph, user_obj)
+                print(user_obj.item)  # remove later
+            self.w.show()
+            self.close()
 
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = LogInScreen()
-    window.show()  # To show the gui window the above code is very static to a window open
-    sys.exit(app.exec())
-
-
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     window = LogInScreen()
+#     window.show()  # To show the gui window the above code is very static to a window open
+#     sys.exit(app.exec())
