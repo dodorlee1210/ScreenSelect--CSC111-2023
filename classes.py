@@ -134,11 +134,16 @@ class _Movie(_Vertex):
 
         self._total_score[username] = score
         if len(user.retrieve_top_scores()) == 5:
-            if min(user.retrieve_top_scores()) <= score:
-                user.retrieve_top_scores().pop(min(user.retrieve_top_scores()))
-                user.retrieve_top_scores()[score] = self
+            if min(dict(user.retrieve_top_scores())) <= score:
+                t = ()
+                for tup in user.retrieve_top_scores():
+                    if tup[0] == min(dict(user.retrieve_top_scores())):
+                        t = tup
+                        break
+                user.retrieve_top_scores().remove(t)
+                user.retrieve_top_scores().append((score, self))
         else:
-            user.retrieve_top_scores()[score] = self
+            user.retrieve_top_scores().append((score, self))
 
 
 @check_contracts
@@ -164,7 +169,7 @@ class _User(_Vertex):
 
     neighbours: set[_Movie]
     past_10_neighbours: list[_Movie]
-    _top_scores: dict[int, _Movie]
+    _top_scores: list[tuple[int, _Movie]]
 
     def __init__(self, name: str) -> None:
         """
@@ -177,9 +182,9 @@ class _User(_Vertex):
         self.director = None
         self.neighbours = set()
         self.past_10_neighbours = []
-        self._top_scores = {}
+        self._top_scores = []
 
-    def retrieve_top_scores(self) -> dict[int, _Movie]:
+    def retrieve_top_scores(self) -> list[tuple[int, _Movie]]:
         """
         Return the top scores
         """
@@ -188,10 +193,7 @@ class _User(_Vertex):
     def modify_preferences(self, genre: str, lang: str, keywords: set[str], director: str) -> None:
         """
         Modify the instance attributes of this user.
-        Precondition:
-        - username != ''
         """
-
         self.genre = genre
         self.lang = lang
         self.keywords = keywords
@@ -246,7 +248,8 @@ class Graph:
         """
         return self._vertices
 
-    def add_movie_vertex(self, item: int, genre: set[str], lang: str, keyword: set[str], director: Optional[str], title: str,
+    def add_movie_vertex(self, item: int, genre: set[str], lang: str, keyword: set[str], director: Optional[str],
+                         title: str,
                          vote_avg: float, overview: str, runtime: int, release_date: str) -> None:
         """Create the movie object and add into the graph itself.
         Preconditions:
@@ -260,19 +263,18 @@ class Graph:
         movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
         self._vertices[item] = movie
 
-
-if __name__ == '__main__':
-    import doctest
-
-    doctest.testmod(verbose=True)
-
-    # When you are ready to check your work with python_ta, uncomment the
-    # following lines. (In PyCharm, select the lines below and press Ctrl/Cmd
-    # + / to toggle comments.) You can use "Run file in Python Console" to run
-    # PythonTA, and then also test your methods manually in the console.
-    import python_ta
-
-    python_ta.check_all(config={
-        'max-line-length': 120,
-        'disable': ['E9992', 'E9997']
-    })
+# if __name__ == '__main__':
+# import doctest
+#
+# doctest.testmod(verbose=True)
+#
+# # When you are ready to check your work with python_ta, uncomment the
+# # following lines. (In PyCharm, select the lines below and press Ctrl/Cmd
+# # + / to toggle comments.) You can use "Run file in Python Console" to run
+# # PythonTA, and then also test your methods manually in the console.
+# import python_ta
+#
+# python_ta.check_all(config={
+#     'max-line-length': 120,
+#     'disable': ['E9992', 'E9997']
+# })
