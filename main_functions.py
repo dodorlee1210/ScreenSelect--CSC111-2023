@@ -12,60 +12,59 @@ Narges Movahedian Nezhad, and Dogyu Lee.
 """
 import csv
 from typing import Any
-
-from python_ta.contracts import check_contracts
-from classes import Graph, _Movie
 import ast
+from python_ta.contracts import check_contracts
+from classes import Graph, _Movie, _User
 
 
-def user_log_in(graph: Graph) -> str:
-    """
-    Return the username of the user after verifying it exists.
-    Add the user to the given graph if non-existent in the graph.
-    Reassign user preferences.
-    """
-    username = input("Please enter your username")
-
-    while username == '':
-        print("The username must not be an empty string. Please enter a valid username.")
-        username = input("Please enter your username.")
-
-    if graph.verify_vertex(username):
-        _user_choices(graph, username)
-        return username
-    else:
-        graph.add_user_vertex(username)
-        _user_choices(graph, username)
-        return username
-
-
-def _user_choices(graph: Graph, username: str) -> None:
-    """
-    Retrieve user movie preference inputs and reassign the given user's preference attributes.
-
-    Precondition:
-        - username != ''
-    """
-    genre = input("Please enter 1 preferred movie genre.")
-
-    lang = input("Please enter 1 preferred language.")
-
-    keywords = input("Please enter a maximum of 3 keywords with spaces in between each keyword.").split()
-
-    while len(keywords) > 3:
-        print("Your input should not exceed 3 words.")
-        keywords = input("Please enter up to 3 keywords.").split()
-
-    director = input("Please enter 1 preferred movie director's name. Example: FirstName LastName.").split()
-
-    while len(director) != 2:
-        print("Please enter the name accordingly: FirstName LastName. There should be a space between the name.")
-        director = input("Please enter 1 preferred movie director's name. EX: FirstName LastName.").split()
-    user_obj = graph.retrieve_vertex_dict()[username]
-    user_obj.modify_preferences(genre, lang, set(keywords), director[0] + ' ' + director[1])
+# def user_log_in(graph: Graph) -> str:
+#     """
+#     Return the username of the user after verifying it exists.
+#     Add the user to the given graph if non-existent in the graph.
+#     Reassign user preferences.
+#     """
+#     username = input("Please enter your username")
+#
+#     while username == '':
+#         print("The username must not be an empty string. Please enter a valid username.")
+#         username = input("Please enter your username.")
+#
+#     if graph.verify_vertex(username):
+#         _user_choices(graph, username)
+#         return username
+#     else:
+#         graph.add_user_vertex(username)
+#         _user_choices(graph, username)
+#         return username
 
 
-def compute(graph: Graph, username: str) -> dict[int, _Movie]:
+# def user_choices(graph: Graph, username: str) -> None:
+#     """
+#     Retrieve user movie preference inputs and reassign the given user's preference attributes.
+#
+#     Precondition:
+#         - username != ''
+#     """
+#     genre = input("Please enter 1 preferred movie genre.")
+#
+#     lang = input("Please enter 1 preferred language.")
+#
+#     keywords = input("Please enter a maximum of 3 keywords with spaces in between each keyword.").split()
+#
+#     while len(keywords) > 3:
+#         print("Your input should not exceed 3 words.")
+#         keywords = input("Please enter up to 3 keywords.").split()
+#
+#     director = input("Please enter 1 preferred movie director's name. Example: FirstName LastName.").split()
+#
+#     while len(director) != 2:
+#         print("Please enter the name accordingly: FirstName LastName. There should be a space between the name.")
+#         director = input("Please enter 1 preferred movie director's name. EX: FirstName LastName.").split()
+#     user_obj = graph.retrieve_vertex_dict()[username]
+#     user_obj.modify_preferences(genre, lang, set(keywords), director[0] + ' ' + director[1])
+#
+
+def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     """
     Returns the top 5 movies that will be recommended for a user.
     Preconditions:
@@ -74,41 +73,34 @@ def compute(graph: Graph, username: str) -> dict[int, _Movie]:
     """
     user_vertex = graph.retrieve_item_obj(username)
     for item in graph.retrieve_vertex_dict():
-        if isinstance(item, int) and graph.retrieve_vertex_dict()[item] not in user_vertex.neighbours:
+        if isinstance(item, int):
+            chk = True
+            for movie_obj in user_vertex.neighbours:
+                if graph.retrieve_vertex_dict()[item] is movie_obj:
+                    chk = False
+                    break
+            if not chk:
+                continue
             graph.retrieve_vertex_dict()[item].score(user_vertex, username)
 
     return user_vertex.retrieve_top_scores()
 
 
-def user_movie_neighbours(top_movies: dict[int, _Movie], graph: Graph, username: str) -> None:
+def user_movie_neighbours(chosen_movie: _Movie, graph: Graph, username: str) -> None:
     """
-    Allows the user to choose the movie from top_movies
-    Preconditions:
-        - len(top_movies) == 5
+    Record the changes given the movie chosen for the user.
     """
     user_vertex = graph.retrieve_item_obj(username)
-    choice = input("What movie would you like to choose from the recommendations")  # title
-    chk = False
-    movie_obj = None
-    while True:
-        for i in top_movies:
-            if choice == top_movies[i].title:
-                movie_obj = top_movies[i]
-                chk = True
-                break
-        if chk:
-            break
-        choice = input("Please enter valid movie title from recommendations only.")
 
     if len(user_vertex.past_10_neighbours) < 10:
-        user_vertex.past_10_neighbours.append(movie_obj)  # adding most recent movies watched to the end of the list
-        user_vertex.neighbours.add(movie_obj)
-        movie_obj.neighbours[user_vertex.item] = user_vertex
+        user_vertex.past_10_neighbours.append(chosen_movie)  # adding most recent movies watched to the end of the list
+        user_vertex.neighbours.add(chosen_movie)
+        chosen_movie.neighbours[user_vertex.item] = user_vertex
     else:
         user_vertex.past_10_neighbours.pop(0)  # removing older movies from the front
-        user_vertex.past_10_neighbours.append(movie_obj)
-        user_vertex.neighbours.add(movie_obj)
-        movie_obj.neighbours[user_vertex.item] = user_vertex
+        user_vertex.past_10_neighbours.append(chosen_movie)
+        user_vertex.neighbours.add(chosen_movie)
+        chosen_movie.neighbours[user_vertex.item] = user_vertex
 
 
 def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> None:
@@ -123,7 +115,11 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
         reader = csv.reader(csv_file)
         next(reader)
         for row in reader:
+            # if row[1] == '[]' or row[4] == '[]':
+            #     continue
+            print(row)
             id_item = int(row[3])
+
             genre = _find_genre_keyword_list(row[1])
             lan = row[5]
             keyword = _find_genre_keyword_list(row[4])
