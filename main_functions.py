@@ -41,7 +41,7 @@ def user_log_in(graph: Graph) -> str:
 def _user_choices(graph: Graph, username: str) -> None:
     """
     Retrieve user movie preference inputs and reassign the given user's preference attributes.
-    
+
     Precondition:
         - username != ''
     """
@@ -114,7 +114,6 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
     """Read the csv filer and add the movies in the greaph class, with the attributes of the different Graph class.
     csv_file1 is the file with information about the Movie without the director
     csv_file2 is the file with the director
-
     Preconditions:
     - csv_file1 != ''
     - csv_file1 is a valid csv file in the specific format described in proposal
@@ -141,22 +140,21 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
 def _find_genre_keyword_list(stri: str) -> set[str]:
     """Return a list of the genre/keywords given a string in the format of
     "[{'id': 28, 'name': 'Action'}, {'id': 12, 'name': 'Adventure'}, {'id': 14, 'name': 'Fantasy'}]"
-
     The returned output is ['Action', 'Adventure', 'Fantasy']
     """
     string = stri.strip("[]")
     dict_list = string.split(", ")
     dict_list1 = [d.strip("{}").split(": ") for d in dict_list]
     dict_list2 = [{k.strip("'"): v.strip("'")} for k, v in dict_list1]
-    names_list = {d["name"] for d in dict_list2 if 'name' in d}
-    return names_list
+    names_list = {d['"name"'] for d in dict_list2 if '"name"' in d}
+    names_list2 = {word.strip('"') for word in names_list}
+    return names_list2
 
 
 def _find_director(csv_file2: str, movie_name: str) -> Any:
     """
     Return the director of the movie if found in the csv_file2 based on the movie name given.
     The return value is none if no director found in the movie dataset
-
     Precondition:
     - movie_name != ''
     - csv_file2 != ''
@@ -190,4 +188,3 @@ if __name__ == '__main__':
         'max-line-length': 120,
         'disable': ['E9992', 'E9997']
     })
-
