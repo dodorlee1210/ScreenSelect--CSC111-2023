@@ -15,6 +15,7 @@ from typing import Any
 
 from python_ta.contracts import check_contracts
 from classes import Graph, _Movie
+import ast
 
 
 def user_log_in(graph: Graph) -> str:
@@ -143,12 +144,19 @@ def _find_genre_keyword_list(stri: str) -> set[str]:
     The returned output is ['Action', 'Adventure', 'Fantasy']
     """
     string = stri.strip("[]")
-    dict_list = string.split(", ")
-    dict_list1 = [d.strip("{}").split(": ") for d in dict_list]
-    dict_list2 = [{k.strip("'"): v.strip("'")} for k, v in dict_list1]
-    names_list = {d['"name"'] for d in dict_list2 if '"name"' in d}
-    names_list2 = {word.strip('"') for word in names_list}
-    return names_list2
+    list_of_dicts = ast.literal_eval('[' + string + ']')
+    set_so_far = set()
+    for dict_1 in list_of_dicts:
+        set_so_far.add(dict_1['name'])
+    return set_so_far
+
+    # string = stri.strip("[]")
+    # dict_list = string.split(", ")
+    # dict_list1 = [d.strip("{}").split(": ") for d in dict_list]
+    # dict_list2 = [{k.strip("'"): v.strip("'")} for k, v in dict_list1]
+    # names_list = {d['"name"'] for d in dict_list2 if '"name"' in d}
+    # names_list2 = {word.strip('"') for word in names_list}
+    # return names_list2
 
 
 def _find_director(csv_file2: str, movie_name: str) -> Any:
