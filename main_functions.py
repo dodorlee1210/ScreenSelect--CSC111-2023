@@ -13,7 +13,6 @@ Narges Movahedian Nezhad, and Dogyu Lee.
 import csv
 from typing import Any
 import ast
-from python_ta.contracts import check_contracts
 from classes import Graph, _Movie
 
 
