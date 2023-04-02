@@ -10,45 +10,13 @@ expressly prohibited.
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
-from typing import Optional, Any
-from python_ta.contracts import check_contracts
-from classes import Graph, _Vertex, _User, _Movie
+from classes import Graph
 import main_functions
-from screen_select_gui import RecommendationScreen, PrefenceScreen, LogInScreen
-from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout)
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QFont
+from screen_select_gui import LogInScreen
+from PyQt6.QtWidgets import QApplication
 import sys
 
-# graph = Graph()
-# main_functions.read_csv_and_create_data(graph, 'data/tmdb_5000_movies.csv', 'data/tmdb_5000_credits.csv')
-# ans = 1
-# while ans:
-#     username = main_functions.user_log_in(graph)
-#     top_movies = main_functions.compute(graph, username)
-#     main_functions.user_movie_neighbours(top_movies, graph, username)
-#     answer = input("Would you like to watch another movie? Enter 'yes' or 'no'")
-#     if answer == 'yes':
-#         ans = 1
-#     else:
-#         ans = 0
-
 if __name__ == '__main__':
-    # import doctest
-    #
-    # doctest.testmod(verbose=True)
-    #
-    # # When you are ready to check your work with python_ta, uncomment the
-    # # following lines. (In PyCharm, select the lines below and press Ctrl/Cmd
-    # # + / to toggle comments.) You can use "Run file in Python Console" to run
-    # # PythonTA, and then also test your methods manually in the console.
-    # import python_ta
-    #
-    # python_ta.check_all(config={
-    #     'max-line-length': 120,
-    #     'disable': ['E9992', 'E9997']
-    # })
-
     graph = Graph()
     main_functions.read_csv_and_create_data(graph, 'data/tmdb_5000_movies1.csv', 'data/tmdb_5000_credits.csv')
     app = QApplication(sys.argv)
