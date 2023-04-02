@@ -19,11 +19,13 @@ import main_functions
 
 
 class RecommendationScreen(QWidget):
-    """The third screen the user sees, also where they choose a recommended movie given.
-    If the ScreenSelect button or Back is clicked then it takes the user back to Prefernce screen.
+    """A widget that is displayed as the final step of the movie recommendation process.
+    Displays a recommendation page with five top scoring movies for the user to choose from.
     """
 
     def __init__(self, top_scores: list[tuple[int, _Movie]], graph: Graph, user_obj: _User) -> None:
+        """Initialize this widget with the given top_scores, graph, and user.
+        """
         super().__init__()
         self.graph = graph
         self.user_obj = user_obj
@@ -200,8 +202,8 @@ class RecommendationScreen(QWidget):
 
     def screenselect1(self):
         """
-        Select the first movie and add it to graph neighbours,
-        then return back to the preferences screen.
+        Add the first movie to the neighbours of the graph attribute of this widget.
+        Return to PreferenceScreen.
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[0][1], self.movie_lst[0][1].item,
@@ -212,8 +214,8 @@ class RecommendationScreen(QWidget):
 
     def screenselect2(self):
         """
-        Select the first movie and add it to graph neighbours,
-        then return back to the preferences screen.
+        Add the second movie to the neighbours of the graph attribute of this widget.
+        Return to PreferenceScreen.
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[1][1], self.movie_lst[1][1].item,
@@ -224,8 +226,8 @@ class RecommendationScreen(QWidget):
 
     def screenselect3(self):
         """
-        Select the first movie and add it to graph neighbours,
-        then return back to the preferences screen.
+        Add the third movie to the neighbours of the graph attribute of this widget.
+        Return to PreferenceScreen.
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[2][1], self.movie_lst[2][1].item,
@@ -236,8 +238,8 @@ class RecommendationScreen(QWidget):
 
     def screenselect4(self):
         """
-        Select the first movie and add it to graph neighbours,
-        then return back to the preferences screen.
+        Add the fourth movie to the neighbours of the graph attribute of this widget.
+        Return to PreferenceScreen.
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[3][1], self.movie_lst[3][1].item,
@@ -248,8 +250,8 @@ class RecommendationScreen(QWidget):
 
     def screenselect5(self):
         """
-        Select the first movie and add it to graph neighbours,
-        then return back to the preferences screen.
+        Add the fifth movie to the neighbours of the graph attribute of this widget.
+        Return to PreferenceScreen.
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[4][1], self.movie_lst[4][1].item,
@@ -260,7 +262,7 @@ class RecommendationScreen(QWidget):
 
     def back(self):
         """
-        Without selecting a movie return to the preferences screen.
+        Return to PreferenceScreen.
         """
         if self.w is None:
             self.w = PrefenceScreen(self.graph, self.user_obj)
