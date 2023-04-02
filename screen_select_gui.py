@@ -37,7 +37,6 @@ class RecommendationScreen(QWidget):
         self.setWindowTitle("ScreenSelect")
         self.setLayout(layout)
         layout.setContentsMargins(60, 60, 60, 60)
-        # layout.setSpacing(0)
         title1 = QLabel("ScreenSelect: Personalized Movie Recommendation System")
         title1.setStyleSheet("color: #347c99;")
         title1.setFont(QFont("Trebuchet MS", 20, QFont.Weight.Bold))
@@ -189,6 +188,16 @@ class RecommendationScreen(QWidget):
         info.setStyleSheet("color: #347c99;")
         layout.addWidget(info, 10, 0)
 
+        ethical = QLabel("Ethical concerns:")
+        ethical.setFont(QFont("Courier New", 10))
+        ethical.setStyleSheet("color: #347c99;")
+        layout.addWidget(ethical, 11, 0)
+
+        ethical = QLabel("Email - aastha.sharma@mail.utoronto.ca")
+        ethical.setFont(QFont("Courier New", 8))
+        ethical.setStyleSheet("color: #347c99;")
+        layout.addWidget(ethical, 12, 0)
+
     def screenselect1(self):
         """
         Select the first movie and add it to graph neighbours,
@@ -288,19 +297,19 @@ class PrefenceScreen(QWidget):
         title2.setFont(QFont("Trebuchet MS", 16, QFont.Weight.Bold))
         layout.addWidget(title2, 2, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
 
-        genre = QLabel("Genre:")
+        genre = QLabel("Genre (ex: Action, Romance, etc):")
         genre.setFont(QFont("Courier New", 15))
         genre.setStyleSheet("color: #347c99;")
         layout.addWidget(genre, 3, 0)
-        lang = QLabel("Language:")
+        lang = QLabel("Language (ex: en, hi, fr, etc):")
         lang.setFont(QFont("Courier New", 15))
         lang.setStyleSheet("color: #347c99;")
         layout.addWidget(lang, 4, 0)
-        key = QLabel("Keywords (max 3):")
+        key = QLabel("Keywords (ex: future, love, etc)(max 3):")
         key.setFont(QFont("Courier New", 15))
         key.setStyleSheet("color: #347c99;")
         layout.addWidget(key, 5, 0)
-        director = QLabel("Director:")
+        director = QLabel("Optional: Director (ex: James Cameron):")
         director.setFont(QFont("Courier New", 15))
         director.setStyleSheet("color: #347c99;")
         layout.addWidget(director, 8, 0)
