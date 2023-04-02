@@ -14,55 +14,8 @@ import csv
 from typing import Any
 import ast
 from python_ta.contracts import check_contracts
-from classes import Graph, _Movie, _User
+from classes import Graph, _Movie
 
-
-# def user_log_in(graph: Graph) -> str:
-#     """
-#     Return the username of the user after verifying it exists.
-#     Add the user to the given graph if non-existent in the graph.
-#     Reassign user preferences.
-#     """
-#     username = input("Please enter your username")
-#
-#     while username == '':
-#         print("The username must not be an empty string. Please enter a valid username.")
-#         username = input("Please enter your username.")
-#
-#     if graph.verify_vertex(username):
-#         _user_choices(graph, username)
-#         return username
-#     else:
-#         graph.add_user_vertex(username)
-#         _user_choices(graph, username)
-#         return username
-
-
-# def user_choices(graph: Graph, username: str) -> None:
-#     """
-#     Retrieve user movie preference inputs and reassign the given user's preference attributes.
-#
-#     Precondition:
-#         - username != ''
-#     """
-#     genre = input("Please enter 1 preferred movie genre.")
-#
-#     lang = input("Please enter 1 preferred language.")
-#
-#     keywords = input("Please enter a maximum of 3 keywords with spaces in between each keyword.").split()
-#
-#     while len(keywords) > 3:
-#         print("Your input should not exceed 3 words.")
-#         keywords = input("Please enter up to 3 keywords.").split()
-#
-#     director = input("Please enter 1 preferred movie director's name. Example: FirstName LastName.").split()
-#
-#     while len(director) != 2:
-#         print("Please enter the name accordingly: FirstName LastName. There should be a space between the name.")
-#         director = input("Please enter 1 preferred movie director's name. EX: FirstName LastName.").split()
-#     user_obj = graph.retrieve_vertex_dict()[username]
-#     user_obj.modify_preferences(genre, lang, set(keywords), director[0] + ' ' + director[1])
-#
 
 def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     """
@@ -75,8 +28,8 @@ def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     for item in graph.retrieve_vertex_dict():
         if isinstance(item, int):
             chk = True
-            for movie_obj in user_vertex.neighbours:
-                if graph.retrieve_vertex_dict()[item] is movie_obj:
+            for id_movie in user_vertex.neighbours:
+                if graph.retrieve_vertex_dict()[item] is user_vertex.neighbours[id_movie]:
                     chk = False
                     break
             if not chk:
@@ -86,7 +39,7 @@ def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     return user_vertex.retrieve_top_scores()
 
 
-def user_movie_neighbours(chosen_movie: _Movie, graph: Graph, username: str) -> None:
+def user_movie_neighbours(chosen_movie: _Movie, id_move: int, graph: Graph, username: str) -> None:
     """
     Record the changes given the movie chosen for the user.
     """
@@ -94,12 +47,12 @@ def user_movie_neighbours(chosen_movie: _Movie, graph: Graph, username: str) -> 
 
     if len(user_vertex.past_10_neighbours) < 10:
         user_vertex.past_10_neighbours.append(chosen_movie)  # adding most recent movies watched to the end of the list
-        user_vertex.neighbours.add(chosen_movie)
+        user_vertex.neighbours[id_move] = chosen_movie
         chosen_movie.neighbours[user_vertex.item] = user_vertex
     else:
         user_vertex.past_10_neighbours.pop(0)  # removing older movies from the front
         user_vertex.past_10_neighbours.append(chosen_movie)
-        user_vertex.neighbours.add(chosen_movie)
+        user_vertex.neighbours[id_move] = chosen_movie
         chosen_movie.neighbours[user_vertex.item] = user_vertex
 
 
@@ -115,11 +68,7 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
         reader = csv.reader(csv_file)
         next(reader)
         for row in reader:
-            # if row[1] == '[]' or row[4] == '[]':
-            #     continue
-            print(row)
             id_item = int(row[3])
-
             genre = _find_genre_keyword_list(row[1])
             lan = row[5]
             keyword = _find_genre_keyword_list(row[4])
