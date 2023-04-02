@@ -24,7 +24,7 @@ class RecommendationScreen(QWidget):
     """
 
     def __init__(self, top_scores: list[tuple[int, _Movie]], graph: Graph, user_obj: _User) -> None:
-        """Initialize this widget with the given top_scores, graph, and user.
+        """Initialize this widget with the given top_scores movie list, graph, and user.
         """
         super().__init__()
         self.graph = graph
