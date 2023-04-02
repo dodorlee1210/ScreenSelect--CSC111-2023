@@ -11,13 +11,10 @@ expressly prohibited.
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
-from typing import Any
-
-from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout)
+from PyQt6.QtWidgets import (QWidget, QPushButton, QLabel, QLineEdit, QGridLayout)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QFont
-import sys
-from classes import Graph, _User, _Movie, _Vertex
+from classes import Graph, _User, _Movie
 import main_functions
 
 
@@ -30,7 +27,6 @@ class RecommendationScreen(QWidget):
         super().__init__()
         self.graph = graph
         self.user_obj = user_obj
-        # top_scores = main_functions.compute(self.graph, self.user_obj.item)
         self.movie_lst = top_scores
 
         self.w = None
@@ -46,33 +42,144 @@ class RecommendationScreen(QWidget):
         title1.setStyleSheet("color: #347c99;")
         title1.setFont(QFont("Trebuchet MS", 20, QFont.Weight.Bold))
         layout.addWidget(title1, 0, 0, 1, 3, Qt.AlignmentFlag.AlignCenter)
-        column = 0
-        for tup_movie in self.movie_lst:
-            save = tup_movie[1].title
-            movie1 = QLabel(save)
-            movie1.setFont(QFont("Courier New", 15))
-            movie1.setStyleSheet("color: #347c99;")
-            layout.addWidget(movie1, 3, column, 1, 3)
-            button1 = QPushButton("Select")
-            button1.setFont(QFont("Courier New", 12))
-            button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
-            button1.clicked.connect(self.screenselect(tup_movie[1]))
-            layout.addWidget(button1, 4, column)
-            column += 1
+
+        save = top_scores[0][1]
+        movie1 = QLabel(save.title)
+        movie1.setFont(QFont("Courier New", 15))
+        movie1.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1, 3, 0, 1, 3)
+        movie1_director = QLabel('Director: ' + save.director)
+        movie1_director.setFont(QFont("Courier New", 12))
+        movie1_director.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1_director, 4, 0, 1, 3)
+        button1 = QPushButton("Select")
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
+        button1.clicked.connect(self.screenselect1)
+        layout.addWidget(button1, 5, 0, 1, 3)
+
+        save = top_scores[1][1]
+        movie1 = QLabel(save.title)
+        movie1.setFont(QFont("Courier New", 15))
+        movie1.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1, 3, 2, 1, 3)
+        movie1_director = QLabel('Director: ' + save.director)
+        movie1_director.setFont(QFont("Courier New", 12))
+        movie1_director.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1_director, 4, 2, 1, 3)
+        button1 = QPushButton("Select")
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
+        button1.clicked.connect(self.screenselect2)
+        layout.addWidget(button1, 5, 2, 1, 3)
+
+        save = top_scores[2][1]
+        movie1 = QLabel(save.title)
+        movie1.setFont(QFont("Courier New", 15))
+        movie1.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1, 3, 4, 1, 3)
+        movie1_director = QLabel('Director: ' + save.director)
+        movie1_director.setFont(QFont("Courier New", 12))
+        movie1_director.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1_director, 4, 4, 1, 3)
+        button1 = QPushButton("Select")
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
+        button1.clicked.connect(self.screenselect3)
+        layout.addWidget(button1, 5, 4, 1, 3)
+
+        save = top_scores[3][1]
+        movie1 = QLabel(save.title)
+        movie1.setFont(QFont("Courier New", 15))
+        movie1.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1, 3, 6, 1, 3)
+        movie1_director = QLabel('Director: ' + save.director)
+        movie1_director.setFont(QFont("Courier New", 12))
+        movie1_director.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1_director, 4, 6, 1, 3)
+        button1 = QPushButton("Select")
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
+        button1.clicked.connect(self.screenselect4)
+        layout.addWidget(button1, 5, 6, 1, 3)
+
+        save = top_scores[4][1]
+        movie1 = QLabel(save.title)
+        movie1.setFont(QFont("Courier New", 15))
+        movie1.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1, 3, 8, 1, 3)
+        movie1_director = QLabel('Director: ' + save.director)
+        movie1_director.setFont(QFont("Courier New", 12))
+        movie1_director.setStyleSheet("color: #347c99;")
+        layout.addWidget(movie1_director, 4, 8, 1, 3)
+        button1 = QPushButton("Select")
+        button1.setFont(QFont("Courier New", 12))
+        button1.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
+        button1.clicked.connect(self.screenselect5)
+        layout.addWidget(button1, 5, 8, 1, 3)
+
         button2 = QPushButton("Back")
         button2.setFont(QFont("Courier New", 12))
         button2.setStyleSheet("background-color: #347c99; color: #FFFFFF;")
         button2.clicked.connect(self.back)
-        layout.addWidget(button2)
+        layout.addWidget(button2, 6, 4, 1, 3)
 
-    def screenselect(self, movie_obj: _Movie):
+    def screenselect1(self):
         """
         Select the first movie and add it to graph neighbours,
         then return back to the preferences screen.
         """
-
         if self.w is None:
-            main_functions.user_movie_neighbours(movie_obj, self.graph, self.user_obj.item)
+            main_functions.user_movie_neighbours(self.movie_lst[0][1], self.movie_lst[0][1].item,
+                                                 self.graph, self.user_obj.item)
+            self.w = PrefenceScreen(self.graph, self.user_obj)
+        self.w.show()
+        self.close()
+
+    def screenselect2(self):
+        """
+        Select the first movie and add it to graph neighbours,
+        then return back to the preferences screen.
+        """
+        if self.w is None:
+            main_functions.user_movie_neighbours(self.movie_lst[1][1], self.movie_lst[1][1].item,
+                                                 self.graph, self.user_obj.item)
+            self.w = PrefenceScreen(self.graph, self.user_obj)
+        self.w.show()
+        self.close()
+
+    def screenselect3(self):
+        """
+        Select the first movie and add it to graph neighbours,
+        then return back to the preferences screen.
+        """
+        if self.w is None:
+            main_functions.user_movie_neighbours(self.movie_lst[2][1], self.movie_lst[2][1].item,
+                                                 self.graph, self.user_obj.item)
+            self.w = PrefenceScreen(self.graph, self.user_obj)
+        self.w.show()
+        self.close()
+
+    def screenselect4(self):
+        """
+        Select the first movie and add it to graph neighbours,
+        then return back to the preferences screen.
+        """
+        if self.w is None:
+            main_functions.user_movie_neighbours(self.movie_lst[3][1], self.movie_lst[3][1].item,
+                                                 self.graph, self.user_obj.item)
+            self.w = PrefenceScreen(self.graph, self.user_obj)
+        self.w.show()
+        self.close()
+
+    def screenselect5(self):
+        """
+        Select the first movie and add it to graph neighbours,
+        then return back to the preferences screen.
+        """
+        if self.w is None:
+            main_functions.user_movie_neighbours(self.movie_lst[4][1], self.movie_lst[4][1].item,
+                                                 self.graph, self.user_obj.item)
             self.w = PrefenceScreen(self.graph, self.user_obj)
         self.w.show()
         self.close()
@@ -196,7 +303,6 @@ class PrefenceScreen(QWidget):
             self.user_obj.modify_preferences(self.genre_input.displayText(), self.lang_input.displayText(), keywords,
                                              self.director_input.displayText())
             top_scores = main_functions.compute(self.graph, self.user_obj.item)
-            print(top_scores)  # remove later
             self.w = RecommendationScreen(top_scores, self.graph, self.user_obj)
         self.w.show()
         self.close()
@@ -255,12 +361,11 @@ class LogInScreen(QWidget):
         else:
             print("Please sign up")
         """
-        if self.input1.displayText() in self.graph.retrieve_vertex_dict():  # point of error
+        if self.input1.displayText() in self.graph.retrieve_vertex_dict():
             user_obj = self.graph.retrieve_item_obj(self.input1.displayText())
             print('Sign in successful!')
             if self.w is None:
                 self.w = PrefenceScreen(self.graph, user_obj)
-                print(user_obj.item)  # remove later
             self.w.show()
             self.close()
         else:
@@ -281,12 +386,5 @@ class LogInScreen(QWidget):
             user_obj = self.graph.retrieve_item_obj(self.input1.displayText())
             if self.w is None:
                 self.w = PrefenceScreen(self.graph, user_obj)
-                print(user_obj.item)  # remove later
             self.w.show()
             self.close()
-
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     window = LogInScreen()
-#     window.show()  # To show the gui window the above code is very static to a window open
-#     sys.exit(app.exec())
