@@ -167,7 +167,7 @@ class _User(_Vertex):
     # _Movie)
     # RI: all(mov not in self.neighbours and mov not in self.past_10_neighbours for mov in self._top_scores.values())
 
-    neighbours: set[_Movie]
+    neighbours: dict[int, _Movie]  # int is the id of movie (item)
     past_10_neighbours: list[_Movie]
     _top_scores: list[tuple[int, _Movie]]
 
@@ -180,7 +180,7 @@ class _User(_Vertex):
         self.lang = None
         self.keywords = None
         self.director = None
-        self.neighbours = set()
+        self.neighbours = {}
         self.past_10_neighbours = []
         self._top_scores = []
 
@@ -262,19 +262,3 @@ class Graph:
         """
         movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
         self._vertices[item] = movie
-
-# if __name__ == '__main__':
-# import doctest
-#
-# doctest.testmod(verbose=True)
-#
-# # When you are ready to check your work with python_ta, uncomment the
-# # following lines. (In PyCharm, select the lines below and press Ctrl/Cmd
-# # + / to toggle comments.) You can use "Run file in Python Console" to run
-# # PythonTA, and then also test your methods manually in the console.
-# import python_ta
-#
-# python_ta.check_all(config={
-#     'max-line-length': 120,
-#     'disable': ['E9992', 'E9997']
-# })
