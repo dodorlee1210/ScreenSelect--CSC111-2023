@@ -202,7 +202,7 @@ class RecommendationScreen(QWidget):
 
     def screenselect1(self):
         """
-        Add the first movie to the neighbours of the graph attribute of this widget.
+        Add the first movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
         Return to PreferenceScreen.
         """
         if self.w is None:
@@ -214,7 +214,7 @@ class RecommendationScreen(QWidget):
 
     def screenselect2(self):
         """
-        Add the second movie to the neighbours of the graph attribute of this widget.
+        Add the second movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
         Return to PreferenceScreen.
         """
         if self.w is None:
@@ -226,7 +226,7 @@ class RecommendationScreen(QWidget):
 
     def screenselect3(self):
         """
-        Add the third movie to the neighbours of the graph attribute of this widget.
+        Add the third movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
         Return to PreferenceScreen.
         """
         if self.w is None:
@@ -238,7 +238,7 @@ class RecommendationScreen(QWidget):
 
     def screenselect4(self):
         """
-        Add the fourth movie to the neighbours of the graph attribute of this widget.
+        Add the fourth movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
         Return to PreferenceScreen.
         """
         if self.w is None:
@@ -250,7 +250,7 @@ class RecommendationScreen(QWidget):
 
     def screenselect5(self):
         """
-        Add the fifth movie to the neighbours of the graph attribute of this widget.
+        Add the fifth movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
         Return to PreferenceScreen.
         """
         if self.w is None:
