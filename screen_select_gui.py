@@ -271,12 +271,13 @@ class RecommendationScreen(QWidget):
 
 
 class PrefenceScreen(QWidget):
-    """The second screen the user sees, also where they put in their preferences and
-    the button - Recommendations is clicked to go to next screen
-    If the Logout button is clicked then the system goes back to the LogInScreen page.
+    """A widget that is displayed as the second step of the movie recommendation process.
+    Displays a preference input page with many movie categories for the user to fill out.
     """
 
     def __init__(self, graph: Graph, user_obj: _User) -> None:
+        """Initialize this widget with the given graph and user.    
+        """
 
         super().__init__()
         self.user_obj = user_obj
@@ -355,7 +356,7 @@ class PrefenceScreen(QWidget):
 
     def log_out(self):
         """
-        Function activated when button1 clicked, takes back to the LogInScreen.
+        Return to LogInScreen.
         """
         if self.w is None:
             self.w = LogInScreen(self.graph)
@@ -363,8 +364,9 @@ class PrefenceScreen(QWidget):
         self.close()
 
     def recommendation_button(self):
-        """
-        Function activated when button2 clicked, takes to the Recommendation screen.
+        """Update user attributes.
+        Obtain top 5 scoring movies list based on user preferences and selection.
+        Display RecommendationScreen.
         """
 
         if self.w is None:
@@ -385,12 +387,13 @@ class PrefenceScreen(QWidget):
 
 
 class LogInScreen(QWidget):
-    """The Log in window that the user sees once the movies are all loaded up in the graph.
-    The user can sign up or sign in. When the cross on top is pressed the code stops running and stops.
-    Input is only the username, possible buttons are sign up or sign in.
+    """A widget that is displayed as the first step of the movie recommendation process.
+    Displays a login page where the user can sign-in or sign-up.
     """
 
     def __init__(self, graph: Graph) -> None:
+        """Initialize this widget with the given graph.
+        """
 
         super().__init__()
         self.graph = graph  # loaded graph
@@ -432,10 +435,9 @@ class LogInScreen(QWidget):
 
     def sign_in(self):
         """
-        if self.input1 in #graph._vertices:
-            call function and move to next screen - preferences
-        else:
-            print("Please sign up")
+        Verify whether the user exists in the graph attribute and display PreferenceScreen.
+        
+        If the user does not exist in the graph attribute, print to try signing up first.
         """
         if self.input1.displayText() in self.graph.retrieve_vertex_dict():
             user_obj = self.graph.retrieve_item_obj(self.input1.displayText())
@@ -449,10 +451,9 @@ class LogInScreen(QWidget):
 
     def sign_up(self):
         """
-        if self.input1 in #graph._vertices:
-            print('Invalid Username')
-        else:
-            # call function and move to next screen - preferences
+        Add a new user vertex to this widget's graph attribute and display PreferenceScreen.
+        
+        If the input username already exists in the graph attribute, print to try signing in.
         """
         if self.input1.displayText() in self.graph.retrieve_vertex_dict():
             print("Username already exists! Please sign in.")
