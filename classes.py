@@ -165,7 +165,7 @@ class _User(_Vertex):
     A vertex that represents a user in Graph.
     Instance Attributes:
       - neighbours: A dictionary that maps past user's choices of recommended movies to its id.
-      - past_10_neighbours: A list representing the user's 10 most recently selected movies from the recommended options
+      - past_10_neighbours: A list representing the user's 10 most recently selected movies from the recommended options.
 
     Representation Invariants:
       - self.keywords is None or (0 <= len(self.keywords) <= 3)
