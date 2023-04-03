@@ -13,6 +13,7 @@ expressly prohibited.
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
+from __future__ import annotations
 from typing import Optional
 from dataclasses import dataclass
 from python_ta.contracts import check_contracts
@@ -49,7 +50,8 @@ class _Movie(_Vertex):
       - overview: A brief overview of this movie.
       - runtime: The runtime of this movie in minutes.
       - release_date: The date this movie was released.
-      - neighbours: A mapping of user vertices to their usernames representing the edges between the user vertex and this movie vertex.
+      - neighbours: A mapping of user vertices to their usernames representing the edges between the user vertex and\
+       this movie vertex.
     Represenatation Invariants:
 
       - self.title != ''
@@ -75,7 +77,7 @@ class _Movie(_Vertex):
     overview: str
     runtime: int
     release_date: str
-    neighbours: dict[str, _Vertex]
+    neighbours: dict[str, _User]
     _total_score: dict[str, int]
 
     def __init__(self, item: int, genre: set[str], lang: str, keyword: set[str], director: Optional[str], title: str,
@@ -83,7 +85,7 @@ class _Movie(_Vertex):
         """
         Initialize the vertex given the above attributes of the Movie class (subclass of the Vertex Class).
         """
-        super().__init__()
+
         self.item = item
         self.genre = genre
         self.lang = lang
@@ -97,11 +99,12 @@ class _Movie(_Vertex):
         self.neighbours = {}
         self._total_score = {}
 
-    def score(self, user: _Vertex, username: str) -> None:
+    def score(self, user: _User, username: str) -> None:
         """
         Compute a preference score based on the given user's preferences and selected movies.
         Update this movie's _total_score by mapping the preference score of a user to that user's username.
-        Update the given user's _top_scores attribute if it has less than 5 movies or if its preference score is greater than the minimum score of that list.
+        Update the given user's _top_scores attribute if it has less than 5 movies or if its preference score is\
+         greater than the minimum score of that list.
 
         Preconditions:
             - username != ''
@@ -141,14 +144,15 @@ class _Movie(_Vertex):
                     score += 5
 
         self._total_score[username] = score
-        if (len(user.retrieve_top_scores()) == 5) and min(dict(user.retrieve_top_scores())) <= score:
-            t = ()
-            for tup in user.retrieve_top_scores():
-                if tup[0] == min(dict(user.retrieve_top_scores())):
-                    t = tup
-                    break
-            user.retrieve_top_scores().remove(t)
-            user.retrieve_top_scores().append((score, self))
+        if len(user.retrieve_top_scores()) == 5:
+            if min(dict(user.retrieve_top_scores())) <= score:
+                t = ()
+                for tup in user.retrieve_top_scores():
+                    if tup[0] == min(dict(user.retrieve_top_scores())):
+                        t = tup
+                        break
+                user.retrieve_top_scores().remove(t)
+                user.retrieve_top_scores().append((score, self))
         else:
             user.retrieve_top_scores().append((score, self))
 
@@ -159,7 +163,7 @@ class _User(_Vertex):
     A vertex that represents a user in Graph.
     Instance Attributes:
       - neighbours: A dictionary that maps past user's choices of recommended movies to its id.
-      - past_10_neighbours: A list representing the user's 10 most recently selected movies from the recommended options.
+      - past_10_neighbours: A list representing the user's 10 most recently selected movies from the recommended options
 
     Representation Invariants:
       - self.keywords is None or (0 <= len(self.keywords) <= 3)
@@ -174,7 +178,8 @@ class _User(_Vertex):
       - all(isinstance(self.neighbours[u], _User) for u in self.neighbours)
       """
     # Private Instance Attributes:
-    # _top_scores: The list containing tuples of top five scoring movies with their preference scores. (scores come first, then comes _Movie)
+    # _top_scores: The list containing tuples of top five scoring movies with their preference scores.\
+    # (scores come first, then comes _Movie)
     # Representation Invariant: Movies in self._top_scores should never part of movies previously selected by the user.
     # Representation Invariant: len(self._top_scores) <= 5
 
@@ -186,7 +191,7 @@ class _User(_Vertex):
         """
         Initialize the vertex with the given username.
         """
-        super().__init__()
+
         self.item = name
         self.genre = None
         self.lang = None
@@ -202,8 +207,8 @@ class _User(_Vertex):
         """
         return self._top_scores
 
-    def modify_preferences(self, genre: Optional[str], lang: Optional[str], keywords: Optional[set[str]],
-                           director: Optional[str]) -> None:
+    def modify_preferences(self, genre: str, lang: str, keywords: set[str],
+                           director: str) -> None:
         """
         Modify the instance attributes of this user given the genre, lang, keywords, and director.
         """
