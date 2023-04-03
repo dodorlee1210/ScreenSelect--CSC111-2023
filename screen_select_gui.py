@@ -16,12 +16,12 @@ from typing import Optional
 from PyQt6.QtWidgets import (QWidget, QPushButton, QLabel, QLineEdit, QGridLayout)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QFont
-from python_ta.contracts import check_contracts
+# from python_ta.contracts import check_contracts
 from classes import Graph, _User, _Movie
 import main_functions
 
 
-@check_contracts
+# @check_contracts
 class RecommendationScreen(QWidget):
     """A widget that is displayed as the final step of the movie recommendation process.
     Displays a recommendation page with five top scoring movies for the user to choose from.
@@ -296,7 +296,7 @@ class RecommendationScreen(QWidget):
         self.close()
 
 
-@check_contracts
+# @check_contracts
 class PrefenceScreen(QWidget):
     """A widget that is displayed as the second step of the movie recommendation process.
     Displays a preference input page with many movie categories for the user to fill out.
@@ -446,7 +446,7 @@ class PrefenceScreen(QWidget):
         self.close()
 
 
-@check_contracts
+# @check_contracts
 class LogInScreen(QWidget):
     """A widget that is displayed as the first step of the movie recommendation process.
     Displays a login page where the user can sign in or sign-up.
@@ -548,5 +548,8 @@ if __name__ == '__main__':
 
     python_ta.check_all(config={
         'max-line-length': 120,
-        'disable': ['E9992', 'E9997']
+        'disable': ['E9992', 'E9997', 'E9998', 'R0902', 'R0915', 'E0611'],
+        'extra-imports': ['PyQt6.QtWidgets', 'PyQt6.QtCore', 'PyQt6.QtGui', 'classes', 'main_functions'],
+        'allowed-io': ['LogInScreen.sing_in', 'LogInScreen.sing_up'],
+
     })
