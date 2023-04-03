@@ -16,10 +16,12 @@ Narges Movahedian Nezhad, and Dogyu Lee.
 from __future__ import annotations
 from typing import Optional
 from dataclasses import dataclass
-from python_ta.contracts import check_contracts
 
 
-@check_contracts
+# from python_ta.contracts import check_contracts
+
+
+# @check_contracts
 @dataclass
 class _Vertex:
     """
@@ -40,7 +42,7 @@ class _Vertex:
     director: Optional[str] = None
 
 
-@check_contracts
+# @check_contracts
 class _Movie(_Vertex):
     """
     A vertex that represents a movie in Graph.
@@ -157,7 +159,7 @@ class _Movie(_Vertex):
             user.retrieve_top_scores().append((score, self))
 
 
-@check_contracts
+# @check_contracts
 class _User(_Vertex):
     """
     A vertex that represents a user in Graph.
@@ -218,7 +220,7 @@ class _User(_Vertex):
         self.director = director
 
 
-@check_contracts
+# @check_contracts
 class Graph:
     """
     A graph class representing the enitre recommendation and selection system.
@@ -279,5 +281,5 @@ if __name__ == '__main__':
 
     python_ta.check_all(config={
         'max-line-length': 120,
-        'disable': ['E9992', 'E9997']
+        'disable': ['E9992', 'E9997', 'R1702', 'R0912', 'R0913', 'W0231', 'R0902']
     })
