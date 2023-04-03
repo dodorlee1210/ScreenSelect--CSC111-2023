@@ -1,7 +1,7 @@
 """CSC111 Winter 2023 Final Project: ScreenSelect
 ===============================
-This file contains the classes and main to run the
-unconnected GUI for ScreenSelect.
+This file contains the classes representing the screens that will be displayed as part of the Graphical User Interface
+(GUI)
 Copyright and Usage Information
 ===============================
 This file is provided solely for the use of marking the project to the
@@ -11,20 +11,46 @@ expressly prohibited.
 This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
+from __future__ import annotations
+from typing import Optional
 from PyQt6.QtWidgets import (QWidget, QPushButton, QLabel, QLineEdit, QGridLayout)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QFont
+from python_ta.contracts import check_contracts
 from classes import Graph, _User, _Movie
 import main_functions
 
 
+@check_contracts
 class RecommendationScreen(QWidget):
     """A widget that is displayed as the final step of the movie recommendation process.
     Displays a recommendation page with five top scoring movies for the user to choose from.
+
+    Instance Attributes:
+      - graph: The loaded graph.
+      - user_obj: The current user for which the Recommendation Screen is open.
+      - movie_lst: The top 5 movies to be recommended.
+      - w: A variable that will be used to open the Prefence Screen after back button is pressed or if movie has been\
+      selected.
+
+    Representation Invariants:
+        - len(self.movie_lst) == 5
+        - self.graph.retrieve_vertex_dict() != {}
+        - self.w is None or isinstance(self.w, PrefenceScreen)
+        - isinstance(self.user_obj.item, str) and self.user_obj.item != ''
     """
+    graph: Graph
+    user_obj: _User
+    movie_lst: list[tuple[int, _Movie]]
+    w: Optional[PrefenceScreen]
 
     def __init__(self, top_scores: list[tuple[int, _Movie]], graph: Graph, user_obj: _User) -> None:
         """Initialize this widget with the given top_scores movie list, graph, and user.
+
+        Preconditions:
+            - len(top_scores) == 5
+            - graph.retrieve_vertex_dict() != {}
+            - isinstance(user_obj.item, str) and user_obj.item != ''
         """
         super().__init__()
         self.graph = graph
@@ -185,10 +211,10 @@ class RecommendationScreen(QWidget):
         button2.clicked.connect(self.back)
         layout.addWidget(button2, 9, 2, 1, 1)
 
-        info = QLabel('Please FullScreen.')
-        info.setFont(QFont("Courier New", 12))
-        info.setStyleSheet("color: #347c99;")
-        layout.addWidget(info, 10, 0)
+        # info = QLabel('Please FullScreen.')
+        # info.setFont(QFont("Courier New", 12))
+        # info.setStyleSheet("color: #347c99;")
+        # layout.addWidget(info, 10, 0)
 
         ethical = QLabel("Ethical concerns:")
         ethical.setFont(QFont("Courier New", 10))
@@ -200,10 +226,10 @@ class RecommendationScreen(QWidget):
         ethical.setStyleSheet("color: #347c99;")
         layout.addWidget(ethical, 12, 0)
 
-    def screenselect1(self):
+    def screenselect1(self) -> None:
         """
         Add the first movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
-        Return to PreferenceScreen.
+        Return to PrefenceScreen.
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[0][1], self.movie_lst[0][1].item,
@@ -212,10 +238,10 @@ class RecommendationScreen(QWidget):
         self.w.show()
         self.close()
 
-    def screenselect2(self):
+    def screenselect2(self) -> None:
         """
         Add the second movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
-        Return to PreferenceScreen.
+        Return to PrefenceScreen
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[1][1], self.movie_lst[1][1].item,
@@ -224,10 +250,10 @@ class RecommendationScreen(QWidget):
         self.w.show()
         self.close()
 
-    def screenselect3(self):
+    def screenselect3(self) -> None:
         """
         Add the third movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
-        Return to PreferenceScreen.
+        Return to PrefenceScreen
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[2][1], self.movie_lst[2][1].item,
@@ -236,10 +262,10 @@ class RecommendationScreen(QWidget):
         self.w.show()
         self.close()
 
-    def screenselect4(self):
+    def screenselect4(self) -> None:
         """
         Add the fourth movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
-        Return to PreferenceScreen.
+        Return to PrefenceScreen
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[3][1], self.movie_lst[3][1].item,
@@ -248,10 +274,10 @@ class RecommendationScreen(QWidget):
         self.w.show()
         self.close()
 
-    def screenselect5(self):
+    def screenselect5(self) -> None:
         """
         Add the fifth movie of this widget's movie_lst to the neighbours of the graph attribute of this widget.
-        Return to PreferenceScreen.
+        Return to PrefenceScreen
         """
         if self.w is None:
             main_functions.user_movie_neighbours(self.movie_lst[4][1], self.movie_lst[4][1].item,
@@ -260,9 +286,9 @@ class RecommendationScreen(QWidget):
         self.w.show()
         self.close()
 
-    def back(self):
+    def back(self) -> None:
         """
-        Return to PreferenceScreen.
+        Return to PrefenceScreen.
         """
         if self.w is None:
             self.w = PrefenceScreen(self.graph, self.user_obj)
@@ -270,15 +296,49 @@ class RecommendationScreen(QWidget):
         self.close()
 
 
+@check_contracts
 class PrefenceScreen(QWidget):
     """A widget that is displayed as the second step of the movie recommendation process.
     Displays a preference input page with many movie categories for the user to fill out.
+
+    Instance Attributes:
+      - graph: The loaded graph.
+      - user_obj: The current user for which the Recommendation Screen is open.
+      - genre_input: Stores the genre inputted by the user
+      - lang_input: Stores the language inputted by the user
+      - key_input1: Stores the first keyword inputted by the user
+      - key_input2: Stores the second keyword inputted by the user
+      - key_input3: Stores the third keyword inputted by the user
+      - director_input: Stores the director name inputted by the user
+      - w: A variable that will be used to open the LogIn screen if the logout button is pressed or Recommendation\
+       Screen is the recommend button is pressed.
+
+    Representation Invariants:
+        - self.graph.retrieve_vertex_dict() != {}
+        - self.w is None or isinstance(self.w, RecommendationScreen) or isinstance(self.w, LogInScreen)
+        - isinstance(self.user_obj.item, str) and self.user_obj.item != ''
+        - isinstance(self.key_input1, QLineEdit())
+        - isinstance(self.key_input2, QLineEdit())
+        - isinstance(self.key_input3, QLineEdit())
+        - isinstance(self.genre_input, QLineEdit())
+        - isinstance(self.director_input, QLineEdit())
     """
+    graph: Graph
+    user_obj: _User
+    genre_input: QLineEdit
+    lang_input: QLineEdit
+    key_input1: QLineEdit
+    key_input2: QLineEdit
+    key_input3: QLineEdit
+    director_input: QLineEdit
+    w: Optional[RecommendationScreen | LogInScreen]
 
     def __init__(self, graph: Graph, user_obj: _User) -> None:
-        """Initialize this widget with the given graph and user.    
-        """
-
+        """Initialize this widget with the given graph and user.
+        Preconditions:
+            - graph.retrieve_vertex_dict() != {}
+            - isinstance(user_obj.item, str) and user_obj.item != ''
+             """
         super().__init__()
         self.user_obj = user_obj
         self.graph = graph
@@ -354,7 +414,7 @@ class PrefenceScreen(QWidget):
         button2.clicked.connect(self.recommendation_button)
         layout.addWidget(button2, 9, 2)
 
-    def log_out(self):
+    def log_out(self) -> None:
         """
         Return to LogInScreen.
         """
@@ -363,7 +423,7 @@ class PrefenceScreen(QWidget):
         self.w.show()
         self.close()
 
-    def recommendation_button(self):
+    def recommendation_button(self) -> None:
         """Update user attributes.
         Obtain top 5 scoring movies list based on user preferences and selection.
         Display RecommendationScreen.
@@ -386,14 +446,30 @@ class PrefenceScreen(QWidget):
         self.close()
 
 
+@check_contracts
 class LogInScreen(QWidget):
     """A widget that is displayed as the first step of the movie recommendation process.
-    Displays a login page where the user can sign-in or sign-up.
+    Displays a login page where the user can sign in or sign-up.
+
+    Instance Attributes:
+      - graph: The loaded graph.
+      - input1: Stores the username.
+      - w: A variable that will be used to open the Prefence Screen after the user successfully signs in or signs up.
+
+    Representation Invariants:
+        - self.graph.retrieve_vertex_dict() != {}
+        - self.w is None or isinstance(self.w, PrefenceScreen)
+        - isinstance(self.input1, QLineEdit())
     """
+    graph: Graph
+    input1: QLineEdit
+    w: Optional[PrefenceScreen]
 
     def __init__(self, graph: Graph) -> None:
         """Initialize this widget with the given graph.
-        """
+        Precondition:
+            - graph.retrieve_vertex_dict() != {}
+             """
 
         super().__init__()
         self.graph = graph  # loaded graph
@@ -433,10 +509,10 @@ class LogInScreen(QWidget):
         button2.clicked.connect(self.sign_up)  # calling the sign in function
         layout.addWidget(button2, 3, 2)
 
-    def sign_in(self):
+    def sign_in(self) -> None:
         """
         Verify whether the user exists in the graph attribute and display PreferenceScreen.
-        
+
         If the user does not exist in the graph attribute, print to try signing up first.
         """
         if self.input1.displayText() in self.graph.retrieve_vertex_dict():
@@ -449,10 +525,10 @@ class LogInScreen(QWidget):
         else:
             print('Sign in unsuccessful, please sign up!')
 
-    def sign_up(self):
+    def sign_up(self) -> None:
         """
         Add a new user vertex to this widget's graph attribute and display PreferenceScreen.
-        
+
         If the input username already exists in the graph attribute, print to try signing in.
         """
         if self.input1.displayText() in self.graph.retrieve_vertex_dict():
@@ -465,3 +541,12 @@ class LogInScreen(QWidget):
                 self.w = PrefenceScreen(self.graph, user_obj)
             self.w.show()
             self.close()
+
+
+if __name__ == '__main__':
+    import python_ta
+
+    python_ta.check_all(config={
+        'max-line-length': 120,
+        'disable': ['E9992', 'E9997']
+    })
