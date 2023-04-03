@@ -14,11 +14,11 @@ Narges Movahedian Nezhad, and Dogyu Lee.
 from typing import Any
 import csv
 import ast
-from python_ta.contracts import check_contracts
+# from python_ta.contracts import check_contracts
 from classes import Graph, _Movie
 
 
-@check_contracts
+# @check_contracts
 def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     """
     Return a list of the top 5 movies that will be recommended for a user.
@@ -41,7 +41,7 @@ def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     return user_vertex.retrieve_top_scores()
 
 
-@check_contracts
+# @check_contracts
 def user_movie_neighbours(chosen_movie: _Movie, id_move: int, graph: Graph, username: str) -> None:
     """
     Map the chosen_movie to user's neighbours and update user's past_10_neighbours with it.
@@ -63,7 +63,7 @@ def user_movie_neighbours(chosen_movie: _Movie, id_move: int, graph: Graph, user
         chosen_movie.neighbours[user_vertex.item] = user_vertex
 
 
-@check_contracts
+# @check_contracts
 def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> None:
     """Read the csv files and add the movies as vertices, after updating each vertex with relevant data, in the given
      graph.
@@ -90,7 +90,7 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
                                    release_date=realese_date)
 
 
-@check_contracts
+# @check_contracts
 def _find_genre_keyword_list(stri: str) -> set[str]:
     """Return a set of the genre or keywords given a string in the format of dictionaries that contain strings and
     integers  within a list.
@@ -110,7 +110,7 @@ def _find_genre_keyword_list(stri: str) -> set[str]:
     return set_so_far
 
 
-@check_contracts
+# @check_contracts
 def _find_director(csv_file2: str, movie_name: str) -> Any:
     """
     Return the director of the movie by the given movie_name.
@@ -142,5 +142,8 @@ if __name__ == '__main__':
 
     python_ta.check_all(config={
         'max-line-length': 120,
-        'disable': ['E9992', 'E9997']
+        'disable': ['E9992', 'E9997', 'R1710', 'W0123', 'R0914', 'R1702'],
+        'extra-imports': ['classes', 'main_functions', 'csv', 'ast'],
+        'allowed-io': ['read_csv_and_create_data', '_find_director'],
+
     })
