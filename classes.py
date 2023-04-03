@@ -1,9 +1,9 @@
 """CSC111 Winter 2023 Final Project: ScreenSelect
 ===============================
-This module contains a collection of Python classes and functions that
+This module contains a collection of Python classes and methods that
 would be used to make our system. Classes include Graph,
-_Vertex (abstract class), _Movie and _User (subclasses of _Vertex).
-Please read before editing the file and comment the changes you make.
+_Vertex (superclass class of _Movie and _User), _Movie and _User (subclasses of _Vertex).
+
 Copyright and Usage Information
 ===============================
 This file is provided solely for the use of marking the project to the
@@ -14,27 +14,23 @@ This file is Copyright (c) 2023 Aastha Sharma, Sidharth Sawhney,
 Narges Movahedian Nezhad, and Dogyu Lee.
 """
 from typing import Optional
-from python_ta.contracts import check_contracts
 from dataclasses import dataclass
+from python_ta.contracts import check_contracts
 
 
 @check_contracts
 @dataclass
 class _Vertex:
     """
-    A vertex in a graph.
+    A class representing a vertex (movie or user) in a graph.
     Instance Attributes:
       - item: The username or movie id stored in this vertex.
       - genre: The collection of genre in a movie.
       - lang: The language used in a movie.
       - keywords: The collection of keywords used to describe a movie.
       - director: The director of a movie.
-    Representation Invariant:
+    Representation Invariants:
       - self.item != ''
-      - self.genre is None or self.genre != []
-      - self.lang is None or self.lang != ''
-      - self.keywords is None or len(self.keywords) >= 1
-      - self.director is None or self.director != ''
     """
     item: int | str
     genre: Optional[set[str] | str] = None
@@ -55,15 +51,22 @@ class _Movie(_Vertex):
       - release_date: The date this movie was released.
       - neighbours: A mapping containing the neighbours of this vertex.
     Represenatation Invariants:
+
       - self.title != ''
+      - isinstance(self.item, int)
+      - self.genre is None or (isinstance(self.genre, set) and (all(isinstance(s,str) for s in self.genre)))
+      - self.lang is None or isinstance(self.lang,str)
+      - self.keywords is None or (isinstance(self.keywords, set) and (all(isinstance(s,str) for s in self.keywords)))
+      - self.director is None or isinstance(self.director, str)
+      - a movie can never be a neighbour of itself
       - self.vote_average >= 0.0
       - self.overview != ''
       - self.runtime >= 0
       - self.release_date != ''
       - self not in self.neighbours
-      - all(type(u) is not type(self) for u in self.neighbours)
-      - all(self in u.neighbours for u in self.neighbours)
-      - all(is_instance(u, _User) for u in self.neighbours)
+      - all(!isinstance(u,self) for u in self.neighbours)
+      - all([[self is self.neighbours[s].neighbours[id] for id self.neighbours[s].neighbours] for s in self.neighbours])
+      - all(isinstance(self.neighbours[u], _User) for u in self.neighbours)
     """
     # Private Instance Attributes:
     # _total_score: A dictionary that stores users name and score for this movie based on Movie preferences
@@ -80,7 +83,7 @@ class _Movie(_Vertex):
         """
         Initialize the vertex given the above attributes of the Movie class (subclass of the Vertex Class).
         """
-
+        super().__init__()
         self.item = item
         self.genre = genre
         self.lang = lang
@@ -96,7 +99,10 @@ class _Movie(_Vertex):
 
     def score(self, user: _Vertex, username: str) -> None:
         """
-        Return the score of the movie
+        Return the score of the movie.
+
+        Preconditions:
+            - username != ''
         """
         score = 0
         if user.genre in self.genre:
@@ -133,15 +139,14 @@ class _Movie(_Vertex):
                     score += 5
 
         self._total_score[username] = score
-        if len(user.retrieve_top_scores()) == 5:
-            if min(dict(user.retrieve_top_scores())) <= score:
-                t = ()
-                for tup in user.retrieve_top_scores():
-                    if tup[0] == min(dict(user.retrieve_top_scores())):
-                        t = tup
-                        break
-                user.retrieve_top_scores().remove(t)
-                user.retrieve_top_scores().append((score, self))
+        if (len(user.retrieve_top_scores()) == 5) and min(dict(user.retrieve_top_scores())) <= score:
+            t = ()
+            for tup in user.retrieve_top_scores():
+                if tup[0] == min(dict(user.retrieve_top_scores())):
+                    t = tup
+                    break
+            user.retrieve_top_scores().remove(t)
+            user.retrieve_top_scores().append((score, self))
         else:
             user.retrieve_top_scores().append((score, self))
 
@@ -155,26 +160,35 @@ class _User(_Vertex):
       the recommended options.
       - past_10_neighbours: A collection representing the user's 10 most recently choosen movies
       from the recommended options.
+
     Representation Invariants:
-      - len(self.keywords) <= 3
+
+      - self.keywords is None or (0 <= len(self.keywords) <= 3)
+      - self.keywords is None or (isinstance(self.keywords, set) and (all(isinstance(s,str) for s in self.keywords)))
+      - isinstance(self.item , str)
+      - self.lang is None or isinstance(self.lang,str)
+      - self.genre is None or isinstance(self.genre, str)
       - len(self.past_10_neighbours) <= 10
-      - self not in self.neighbours
-      - all(type(u) is not type(self) for u in self.neighbours)
-      - all(self in u.neighbours for u in self.neighbours)
+      - a user can never be a neighbour of itself
+      - all(!isinstance(u,self) for u in self.neighbours)
+      - all([[self is self.neighbours[s].neighbours[id] for id self.neighbours[s].neighbours] for s in self.neighbours])
+      - all(isinstance(self.neighbours[u], _User) for u in self.neighbours)
       """
     # Private Instance Attributes:
     # _top_scores: The mapping containing the top five scoring movies. (key represents the scrore and value is the
     # _Movie)
-    # RI: all(mov not in self.neighbours and mov not in self.past_10_neighbours for mov in self._top_scores.values())
+    # Representation Invariant: Movies in self._top_scores should never part of movies previously selected by the user.
+    # Representation Invariant: len(self._top_scores) <= 5
 
     neighbours: dict[int, _Movie]  # int is the id of movie (item)
     past_10_neighbours: list[_Movie]
-    _top_scores: list[tuple[int, _Movie]]
+    _top_scores: list[tuple[int, _Movie]]  # int represents score
 
     def __init__(self, name: str) -> None:
         """
         Initialize the vertex given the above attributes of the _User class (subclass of the Vertex Class).
         """
+        super().__init__()
         self.item = name
         self.genre = None
         self.lang = None
@@ -190,7 +204,8 @@ class _User(_Vertex):
         """
         return self._top_scores
 
-    def modify_preferences(self, genre: str, lang: str, keywords: set[str], director: str) -> None:
+    def modify_preferences(self, genre: Optional[str], lang: Optional[str], keywords: Optional[set[str]],
+                           director: Optional[str]) -> None:
         """
         Modify the instance attributes of this user.
         """
@@ -209,7 +224,7 @@ class Graph:
     # - _vertices: A collection of the vertices contained in this graph. Maps item to a _Movie (id) or _User (name)
     # instance.
 
-    _vertices: dict[int | str, _Vertex]  # unique names and ids only
+    _vertices: dict[int | str, _Vertex]  # unique names and ids only as keys
 
     def __init__(self) -> None:
         """
@@ -217,18 +232,12 @@ class Graph:
         """
         self._vertices = {}
 
-    def verify_vertex(self, item: str) -> bool:
-        """
-        Return whether the user already exists in the graph.
-        """
-
-        return item in self._vertices
-
     def add_user_vertex(self, username: str) -> None:
         """
         Add a user to the graph.
         Precondition:
         - username != ''
+        - username not in self._vertices
         """
         self._vertices[username] = _User(username)
 
@@ -243,8 +252,6 @@ class Graph:
     def retrieve_vertex_dict(self) -> dict[int | str, _Vertex]:
         """
         Return the _User instance corresponding to the username.
-        Precondition:
-        - username != ''
         """
         return self._vertices
 
@@ -262,3 +269,12 @@ class Graph:
         """
         movie = _Movie(item, genre, lang, keyword, director, title, vote_avg, overview, runtime, release_date)
         self._vertices[item] = movie
+
+
+if __name__ == '__main__':
+    import python_ta
+
+    python_ta.check_all(config={
+        'max-line-length': 120,
+        'disable': ['E9992', 'E9997']
+    })
