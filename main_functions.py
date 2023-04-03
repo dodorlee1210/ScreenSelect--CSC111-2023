@@ -18,7 +18,7 @@ from classes import Graph, _Movie
 
 def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
     """
-    Returns the top 5 movies that will be recommended for a user.
+    Return a list of the top 5 movies that will be recommended for a user.
     Preconditions:
         - username != ''
         - graph.retrieve_vertex_dict() != {}
@@ -40,7 +40,7 @@ def compute(graph: Graph, username: str) -> list[tuple[int, _Movie]]:
 
 def user_movie_neighbours(chosen_movie: _Movie, id_move: int, graph: Graph, username: str) -> None:
     """
-    Record the changes given the movie chosen for the user.
+    Map the chosen_movie to user's neighbours and update user's past_10_neighbours with it.
     """
     user_vertex = graph.retrieve_item_obj(username)
 
@@ -56,9 +56,7 @@ def user_movie_neighbours(chosen_movie: _Movie, id_move: int, graph: Graph, user
 
 
 def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> None:
-    """Read the csv filer and add the movies in the greaph class, with the attributes of the different Graph class.
-    csv_file1 is the file with information about the Movie without the director
-    csv_file2 is the file with the director
+    """Read the csv files and add the movies as vertices, after updating each vertex with relevant data, in the given graph.
     Preconditions:
     - csv_file1 != ''
     - csv_file1 is a valid csv file in the specific format described in proposal
@@ -83,9 +81,7 @@ def read_csv_and_create_data(graph: Graph, csv_file1: str, csv_file2: str) -> No
 
 
 def _find_genre_keyword_list(stri: str) -> set[str]:
-    """Return a list of the genre/keywords given a string in the format of
-    "[{'id': 28, 'name': 'Action'}, {'id': 12, 'name': 'Adventure'}, {'id': 14, 'name': 'Fantasy'}]"
-    The returned output is ['Action', 'Adventure', 'Fantasy']
+    """Return a set of the genre or keywords given a string in the format of dictionaries that contain strings and ints within a list.
     """
     string = stri.strip("[]")
     list_of_dicts = ast.literal_eval('[' + string + ']')
@@ -97,8 +93,8 @@ def _find_genre_keyword_list(stri: str) -> set[str]:
 
 def _find_director(csv_file2: str, movie_name: str) -> Any:
     """
-    Return the director of the movie if found in the csv_file2 based on the movie name given.
-    The return value is none if no director found in the movie dataset
+    Return the director of the movie by the given movie_name.
+    If no director is found, return None.
     Precondition:
     - movie_name != ''
     - csv_file2 != ''
