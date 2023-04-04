@@ -1,6 +1,6 @@
 """CSC111 Winter 2023 Final Project: ScreenSelect
 ===============================
-This module is the saved state that will be used when running main.
+This module is the saved state of the dataset that will be used to load the graph when run on main.
 
 Copyright and Usage Information
 ===============================
