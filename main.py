@@ -19,7 +19,7 @@ import pickle
 
 if __name__ == '__main__':
     # Below runs the program with 4803 movies and takes the graph saved in the saved_state file
-    with open('file.pkl', 'rb') as file:
+    with open('data/file.pkl', 'rb') as file:
         # Call load method to deserialze
         graph = pickle.load(file)
     app = QApplication(sys.argv)
@@ -30,8 +30,9 @@ if __name__ == '__main__':
     # To check if the graph loads properly, uncomment the bottom code, which creates a new graph and loads 400 movies
     # please comment the above code
     # The call to load 400 movies will take approx 2 mins!
+    # Place the data folder in the repository containing the other files, or else change the path depending on where the folder is stored.
     # graph_small = Graph()
-    # main_functions.read_csv_and_create_data(graph_small, 'data/tmdb_5000_movies1.csv', 'data/tmdb_5000_credits.csv')
+    # main_functions.read_csv_and_create_data(graph_small, 'data/tmdb_5000_movies1.csv', 'data/tmdb_5000_credits.csv') 
     # app = QApplication(sys.argv)
     # window = LogInScreen(graph_small)
     # window.show()  # To show the gui window the above code is very static to a window open
